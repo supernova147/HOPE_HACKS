@@ -1,0 +1,10 @@
+To Do List
+[] Render map using Google Maps API
+[] Get user query for location
+    [] Auto-prompt for user location for default location
+[] Use user query to get location's lat and long to input into 'position' variable in map.js
+    [] Make position dynamic by getting query from server.js and using it in map.js
+[] Center user query's location in the map
+[] Fetch clinics' information fromm NCOne API
+    [] Filter clinics to return only clinics near query location (lat and long)
+[] Render markers for all clinics within the query location
