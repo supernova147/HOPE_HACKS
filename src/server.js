@@ -2,6 +2,7 @@ require('dotenv').config(); // Have to install dotenv in order to use variables 
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const geocode = require('../public/pages/geocode.js');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -17,6 +18,20 @@ app.get('', (req, res) => {
 
 app.get('/map', (req, res) => {
     res.sendFile(path.join(__dirname, '../public/pages/testingmap.html'));
+});
+
+app.get('/geocode', async (req, res) => {
+    // if (!req.query.location)
+    //     return res.send({
+    //         error: 'You must provide a location',
+    //     });
+
+    try {
+        const data = await geocode(process.env.MAPS_API_KEY);
+        res.send(data);
+    } catch (err) {
+        console.log('Error fetching data:', err);
+    }
 });
 
 app.get('/config', (req, res) => {

@@ -57,34 +57,55 @@
 
 // DOCUMENTATION: https://developers.google.com/maps/documentation/javascript/load-maps-js-api#migrate-to-dynamic \\
 let map;
-const position = { lat: -34.397, lng: 150.644 }; // example coordinates
+const defaultCoor = { lat: 35.227085, lng: -80.843124 }; // default center coordinates: Charlotte, NC
+const markers = [];
+let userMarker;
+// NOTE: markers[0] will always house the user marker as it is the first marker rendered
 
 const initMap = async () => {
     const { Map } = await google.maps.importLibrary('maps');
     map = new Map(document.getElementById('map'), {
-        center: position,
+        center: defaultCoor,
         zoom: 8,
         mapId: 'a23b767cb32962acd3094bd2',
     });
 
     console.log('Maps JS API loaded');
-    addMarker();
+    userMarker = await addMarker(defaultCoor);
 };
 
-const addMarker = async () => {
+const addMarker = async (coor) => {
     const { AdvancedMarkerElement } = await google.maps.importLibrary('marker');
     const marker = new AdvancedMarkerElement({
         map: map,
-        position: position,
-        title: 'Uluru',
+        position: coor,
+        title: 'Charlotte',
     });
-
-    console.log('Rendered marker: ', marker);
+    console.log('Rendered marker: ', marker.position);
+    return marker;
 };
 
-fetch('/config')
-    .then((r) => r.json())
-    .then(console.log);
+// DOCUMENTATION: https://developers.google.com/maps/documentation/javascript/reference/geocoder \\
+const geocode = async (address) => {
+    const { Geocoder } = await google.maps.importLibrary('geocoding');
+    const geocoder = new Geocoder();
+    geocoder.geocode({ address: address }, (res, stat) => {
+        if (stat === google.maps.GeocoderStatus.OK) {
+            const coor = {
+                lat: res[0].geometry.location.lat(),
+                lng: res[0].geometry.location.lng(),
+            };
+            // prettier-ignore
+            console.log(`New coordinates: ${coor}`);
+            userMarker.position = coor;
+            map.setCenter(coor);
+        } else {
+            console.error(
+                `Geocode was not successful for the following reason: ${stat}`
+            );
+        }
+    });
+};
 
 const loadAPI = (apiKey) => {
     // This function is loading in the Google Map's API that I can dynamically insert the API key into, and setting up the callback
@@ -108,9 +129,9 @@ const loadGoogleMaps = async () => {
         const res = await fetch('/config'); // fetching the API key served by Express in the /config route
         console.log('fetch /config response:', res.status);
 
-        const data = await res.json();
+        const config = await res.json();
 
-        await loadAPI(data.MAPS_API_KEY);
+        await loadAPI(config.MAPS_API_KEY);
 
         console.log('Google Maps API loaded, now initializing map...');
         await initMap();
@@ -122,6 +143,14 @@ const loadGoogleMaps = async () => {
 window.addEventListener('DOMContentLoaded', () => {
     console.log('DOMContentLoaded fired, starting loader...');
     loadGoogleMaps();
+
+    const searchForm = document.getElementById('map__searchForm');
+    searchForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const userQuery = document.getElementById('map__inputBar').value;
+        const coor = await geocode(userQuery);
+        await addMarker(coor);
+    });
 });
 
 /*
@@ -129,4 +158,6 @@ ISSUES DOCUMENTATION:
 - The Google Maps JavaScript API runs in the browser, not on the server. So, the this file must be on the client-side
 - I have to reference my API key in the HTML file to load the API via <script>. To hide it, I made a config route via Express to be able to send the API key from back-end to front-end w/o exposing it
 - map.js is running before the Google Maps API is fetched and finished, returning a ReferenceError ('google is undefined'). So, I have to explicitly make sure the API runs before map.js via a Promise
+
+- Normally for deployment, would have a build process that'll call secrets, such as API keys (production link)---can store it in GitHub
 */

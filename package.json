@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/supernova147/HOPE_HACKS#readme",
   "dependencies": {
+    "@googlemaps/google-maps-services-js": "^3.4.2",
     "@googlemaps/js-api-loader": "^1.16.10",
     "cors": "^2.8.5",
     "dotenv": "^17.2.2",
