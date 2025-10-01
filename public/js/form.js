@@ -26,7 +26,7 @@ const form = document.getElementById('contact');
 const emailRegex = /^[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+(?:\.[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+)*@(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+[A-Za-z]{2,}$/i;
 const phoneRegex = /^(?:\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4}))$/;
 const nameRegex = /^[a-zA-Z\s'-]+$/;
-const addressRegex = /^[A-Za-z0-9.!#$%&*+/=?^_`{|}~-]+(?:\.[A-Za-z0-9.!#$%&*+/=?^_`{|}~-]+)*@(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+[A-Za-z]{2,}$/i;
+const addressRegex = /^(?=.*\d)[A-Za-z0-9 .,'\-#]{5,100}$/;
 
 //Setting valid inputs as false by default.
 let nameValid = false;
@@ -36,19 +36,14 @@ let emailValid = false;
 let locationValid = false;
 let directionValid = false;
 
-// const email_check = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|
-// add error message to dom when its wrong.
-
 function validation() {
     // For each section of the form, regexs were used to check, as well as blank inputs; else the result will be true.
     if (!emailRegex.test(email.value.trim()) || email.value.trim() == "") { 
-        emailError.textContent = 'Valid email address is required.';
+        emailError.textContent = 'Valid email address is required.'; //Error messages will pop up on invalid entry.
         emailValid = false;
-        console.log(emailValid);
     } else {
         emailError.textContent = '';
         emailValid = true;
-        console.log(emailValid);
     }
 
     if (!phoneRegex.test(phone.value.trim()) || phone.length < 10) {
@@ -72,7 +67,6 @@ function validation() {
     if (!addressRegex.test(address.value.trim()) || address.value == '' || state.value == '' || state.value.length < 2 || city.value == '' || zip.value == '' || zip.value.length < 5) {
         locationError.innerHTML = 'Please enter a valid location.';
         locationValid = false;
-        console.log('address invalid');
     }
     else {
         locationError.innerHTML = '';
