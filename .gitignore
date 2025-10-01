@@ -6,3 +6,5 @@ node_modules/
 
 # Ignore .prettierrc file
 .prettierrc
+
+todo.text

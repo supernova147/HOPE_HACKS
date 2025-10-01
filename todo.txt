@@ -1,0 +1,12 @@
+To Do List
+[✅] Render map w/ marker using Google Maps API
+------ COMPLETED 09/28
+[✅] Fetched static data from Google Maps Geocoding API
+    [✅] Refactor function to accept dynamic input
+        [✅] Get user query for location
+        [✅] Change user input of semantic places to correlated lat and long coordinate
+        [] (NICE-TO-HAVE) Auto-prompt for user location for default location
+[✅] Center user query's location in the map
+[] Fetch clinics' information from NCOne API
+    [] Filter clinics to return only clinics near query location (lat and long)
+[] Render markers for all clinics within the query location

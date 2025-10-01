@@ -1,19 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Homepage</title>
-        <link rel="stylesheet" href="HOPE_HACKS/public/css/style.css">
-    </head>
-    <body>
-        <h1>Server testing</h1>
-    <header>
-        <!-- Filled in by Eddie -->
-    </header>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Homepage</title>
+  <link rel="stylesheet" href="css/shared.css">
+  <link rel="stylesheet" href="css/home.css">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header class="header">
+    <nav class="navbar">
+      <a href="index.html" class="headLogo__a">
+        <img src="img/HBHprime.png" alt="HomeBase Health" height="70">
+      </a>
+      <ul class="nav-menu">
+        <li class="nav__li"><a href="index.html" class="nav__a">Home</a></li>
+        <li class="nav__li"><a href="map.html" class="nav__a">Clinic Locator</a></li>
+        <li class="nav__li"><a href="#" class="nav__a">Form</a></li>
+        <li class="nav__li"><a href="#" class="nav__a">Resources</a></li>
+      </ul>
+      <div class="burger">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </div>
+    </nav>
+  </header>
 
-    <footer>
-        <!-- Filled in by Nia -->
-    </footer>
-    </body>
+  <section class="hero__section">
+    <img src="img/assistance.jpeg" alt="Us helping the homeless" id="heroImage__img">
+    <div class="textBox__div">
+      <h1 id="heroHead__h1">WE GOT YOU!</h1>
+      <p id="heroText__p">
+        What we, at HomeBase Health, focus on is helping those who are disadvantaged or are in underprivileged communities get the healthcare assistance they need. We work all over the state of North Carolina to help out these communities as much as possible.
+      </p>
+    </div>
+  </section>
+
+  <section class="assist__section">
+    <div class="mapForm__div">
+        <div class="divIMG__div">
+        <img class="sectionIMG__img" src="img/Street-Medicine.jpg" alt="Street Medicine">
+        </div>
+        <h2 class="head__h2">Find HealthCare Locations!</h2>
+        <p class="sectionTxt__p">
+          If you are currently struggling with finding assistance or know someone who does, click the button below to use our map page and find places where you or others can get assistance.
+        </p>
+    <div class="buttons__div">
+        <button class="primaryBtn" onclick="location.href='map.html'">Map</button>
+    </div>
+    </div>
+
+    <div class="resource__div">
+        <div class="divIMG__div">
+        <img class="sectionIMG__img" src="img/temp.webp" alt="Resource Image">
+        </div>
+        <h2 class="head__h2">You Can Help Too!</h2>
+        <p class="sectionTxt__p">
+          Even if you don't work directly on the ground with us, You can still help others. Click the button on the left to inform us on locations where your neighbors without the assistance are. Click the button on the right to find more resources that could help others.
+        </p>
+        <div class="buttons__div">
+        <button class="primaryBtn" onclick="location.href='#'">Form</button>
+        <button class="primaryBtn" onclick="location.href='#'">Resources</button>
+        </div>
+    </div>
+  </section>
+  <section class="about__section">
+    <div class="about__text">
+      <h2 id="aboutSectHead__h2">About Us</h2>
+      <h3 id="aboutPHead__h3"></h3>
+      <p id="aboutText__p">
+        In Homebase Health, we assist those around the state of North Carolina who need health care assistance and struggle to get the help they need. Along with that, we help educate others in said areas how they could help their neighbors who may be in those situations.
+      </p>
+    </div>
+    <div class="abtIMG__div">
+        <img src="img/marscella-ling-pZjDQ1PN59A-unsplash.jpg" alt="About image" class="about__img">
+    </div>
+  </section>
+
+  <script src="js/script.js"></script>
+</body>
 </html>
