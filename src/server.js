@@ -1,3 +1,4 @@
+require('dotenv').config(); // Have to install dotenv in order to use variables inside .env file
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
@@ -12,6 +13,16 @@ app.use(express.static(path.join(__dirname, '../public')));
 app.get('', (req, res) => {
     console.log('Server connected to the port');
     res.sendFile(path.join(__dirname, '../public/index.html'));
+});
+
+app.get('/map', (req, res) => {
+    res.sendFile(path.join(__dirname, '../public/pages/testingmap.html'));
+});
+
+app.get('/config', (req, res) => {
+    console.log('Serving API key:', process.env.MAPS_API_KEY);
+    // config to use api key in html when Express serves it
+    res.json({ MAPS_API_KEY: process.env.MAPS_API_KEY });
 });
 
 app.get('/form', (req, res) => {
