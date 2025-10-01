@@ -1,0 +1,67 @@
+#mapHead__section {
+    font-size: 4rem;
+    margin-bottom: 2rem;
+}
+
+.input__section {
+    text-align: center;
+    margin: 6rem auto;
+    max-width: 70%;
+}
+
+/* Inputs */
+.inputBox__input {
+    height: 5rem;
+    width: 100%;
+    border-radius: 0.5rem;
+    padding: 0.7rem;
+    border: 0.15rem #b3b3b3 solid;
+    margin-bottom: 1rem;
+    font-size: 2rem;
+    outline: none;
+    box-shadow: grey 0.1rem;
+    transition: border-color 0.2s ease;
+
+}
+
+.inputBox__input:focus {
+    border-color: #1d8a99;
+}
+
+.search-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.search-row .inputBox__input {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+#mapButton__button {
+    width: 5rem;
+    height: 5rem;
+    border: 1px solid #b3b3b3;
+    border-radius: 0.5rem;
+    background-size: 1.25rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+#mapButton__button:hover {
+    background-color: #eaeaea;
+    border-color: #999;
+}
+
+.map__section {
+    background-color: #31842c;
+    padding: 50%;
+}
+
+@media only screen and (max-width: 768px) {
+.map__section {
+    background-color: #31842c;
+    padding: 50%;
+}
+}

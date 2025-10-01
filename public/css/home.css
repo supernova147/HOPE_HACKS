@@ -1,0 +1,240 @@
+/* Hero Section Elements */
+.hero__section {
+  position: relative;
+  width: 100%;
+}
+
+#heroImage__img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-bottom-left-radius: 2rem;
+  border-bottom-right-radius: 2rem;
+}
+
+.textBox__div {
+  position: absolute;
+  left: 50%;
+  bottom: 25%;
+  transform: translateX(-50%);
+  background-color: #1d8a99d9; 
+  text-align: center;
+  border-radius: 2.5rem;
+  padding: 5rem;
+  width: 90%;
+  z-index: 1;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.textBox__div:hover {
+  transform: translateX(-50%) translateY(-5px);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.2);
+}
+
+#heroHead__h1 {
+  font-size: 3rem;
+  color: #ECF8FF;
+  margin-bottom: 2rem;
+}
+
+#heroText__p {
+  font-size: 1.5rem;
+  color: #ECF8FF;
+}
+
+/* Map/Form & Resource Section Elements */
+.assist__section {
+  display: flex;
+  gap: 3rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 3rem 1rem;
+  gap: 5rem;
+}
+
+.mapForm__div,
+.resource__div {
+  flex: 1 1 400px;
+  max-width: 500px;
+  background-color: #0D3b66;
+  border-radius: 2rem;
+  color: #ECF8FF;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  transition: transform 0.3s, box-shadow 0.3s;
+  
+}
+
+.mapForm__div:hover,
+.resource__div:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.2);
+}
+
+.sectionIMG__img {
+  width: 100%;
+  height: auto;
+  display: block;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+  border-top-left-radius: 2.5rem;
+  border-top-right-radius: 2.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.mapForm__div {
+  text-align: center;
+  background-color: #1D8A99;
+  color: #000000;
+  border-radius: 2.5rem;
+}
+
+.head__h2 {
+  font-size: 3rem;
+  padding: 1.2rem;
+
+}
+
+.divIMG__div {
+  border-radius: 4rem;
+  width: 100%;
+  height: auto;
+}
+
+.resource__div {
+  text-align: center;
+  background-color: #1D8A99;
+  color: #000000;
+  border-radius: 2.5rem;
+}
+
+/* About Section Elements */
+.about__section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 3rem;
+  background-color: #0D3b66;
+  color: #ECF8FF;
+  border-top-left-radius: 2.5rem;
+  border-top-right-radius: 2.5rem;
+  width: 100%;
+}
+
+.about__text {
+  flex: 1;
+  padding: 4rem;
+}
+
+.about__text h2 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.about__text h3 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.about__text p {
+  font-size: 1.5rem;
+  line-height: 1.6;
+}
+
+.abtIMG__div {
+  flex: 1;
+  text-align: center;
+}
+
+.about__img {
+  width: 100%;
+  height: auto;
+  border-top-left-radius: 1.5rem;
+  border-bottom-left-radius: 1.5rem;
+  border-top-right-radius: 1.5rem;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.about__img:hover {
+  transform: scale(1.03);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.3);
+}
+
+.sectionTxt__p {
+  margin-top: 1rem; 
+  font-size: 1.5rem;
+  padding: 2rem;
+}
+
+/* Button Styling */
+.primaryBtn {
+  min-width: 120px;
+  min-height: 48px;
+  padding: 1rem 2rem;
+  margin: 0.5rem;
+  background-color: #ECF8FF;
+  border: 0;
+  border-radius: 1rem;
+  color: #0D3b66;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+.primaryBtn:hover {
+  opacity: 0.9;
+  background-color: #0D3b66;
+  color: #ECF8FF;
+}
+
+.buttons__div {
+  display: flex;
+  justify-content: space-evenly;
+  margin: 1.5rem;
+}
+
+@media only screen and (max-width: 768px) {   
+  .textBox__div {
+    left: 50%;
+    bottom: 15%;
+    transform: translateX(-50%);
+    max-width: 85%;
+    padding: 2rem 1.5rem;
+  } 
+
+  #heroHead__h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  #heroText__p {
+    font-size: 1rem;
+  }
+
+  .sectionIMG__img,
+  .about__img {
+    width: 100%;
+  }
+
+  .primaryBtn {
+    font-size: 1.5rem;
+    padding: 0.8rem 1.5rem;
+    min-width: 100px;
+  }
+
+  .about__section {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .abtIMG__div {
+    margin-top: 2rem;
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  .textBox__div {
+    bottom: 8%;
+    max-width: 95%;
+    padding: 1.5rem 1rem;
+    border-radius: 1.5rem;
+  }
+}
