@@ -38,7 +38,6 @@ label {
 }
 /* Form Heading & Description MOBILE*/
 .form-content {
-    display: inline-block
     margin: 0 auto;
     padding: 1rem;
     text-align: center;
@@ -77,7 +76,6 @@ label {
 .form-location {
     display: grid;
     padding: 1rem;
-    align-items center;
     box-sizing: border-box;
 }
 
