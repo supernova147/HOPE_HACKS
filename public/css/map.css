@@ -1,17 +1,18 @@
 #mapHead__section {
-    font-size: 4rem;
+    font-size: 1.5em;
     margin-bottom: 2rem;
 }
 
 .input__section {
     text-align: center;
-    margin: 6rem auto;
+    margin: 1rem auto;
+    margin-bottom: 2rem;
     max-width: 70%;
 }
 
 /* Inputs */
 .inputBox__input {
-    height: 5rem;
+    height: 3rem;
     width: 100%;
     border-radius: 0.5rem;
     padding: 0.7rem;
@@ -40,8 +41,8 @@
 }
 
 #mapButton__button {
-    width: 5rem;
-    height: 5rem;
+    width: 3rem;
+    height: 3rem;
     border: 1px solid #b3b3b3;
     border-radius: 0.5rem;
     background-size: 1.25rem;
