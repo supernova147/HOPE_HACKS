@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help Us Help</title>
+        <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="./css/form.css"
+</head>
+<body>
+    <div class="form-content">
+        <h2>Help Us Help</h2>
+        <p>Your input helps us connect individuals experiencing homelessness with the care and resources they need. 
+            By sharing information through this form, you play an important role in helping our team identify those in need and provide support. 
+            Please provide as much detail as possible about the individual's location and situation, so we can respond appropriately and safely.</p>
+    </div>
+
+    <div class="form">
+        <form id="contact">
+        <div class="form-identity">
+            <label>Full Name</label>
+            <input placeholder="John Doe" id="name" class="form-input--border" autocomplete="name" novalidate>
+                <p class="contactError" id="nameError"></p>
+            <label>Phone Number</label>
+            <input placeholder="704-222-3333" maxlength="10" id="phone" autocomplete="tel" class="form-input--border" novalidate>
+                <p class="contactError" id="phoneError"></p>
+            <label>Email</label>
+            <input placeholder="example@email.com" id="email" class="form-input--border" autocomplete="email" novalidate>
+                <p class="contactError" id="emailError"></p>
+        </div>
+
+        <div class="form-location">
+            <label>Relative Location of Encampment</label>
+            <input placeholder="Relative Street Address" id="address" autocomplete="street-address" novalidate>
+            <input placeholder="State" maxlength="2" id="state" autocomplete="address-level1" novalidate>
+            <div class="form-location--2">
+                <select placeholder="City" id="city" class="form-input--border" novalidate>
+                    <option value=""></option>
+                    <option value="Charlotte">Charlotte</option>
+                    <option value="Raleigh">Asheville</option>
+                    <option value="Gaston">Wilmington</option>
+                    <option value="Greensboro">Greensboro</option>
+                    <option value="Fayetteville">Fayetteville</option>
+                    <option value="Winston-Salem">Winston-Salem</option>
+                </select>
+                <input placeholder="Zip" maxlength="5" id="zip" class="form-input--border" autocomplete="postal-code" novalidate>
+            </div>
+            <p class="contactError" id="locationError"></p>
+        </div>
+
+        <div class="form-directions">
+            <label>Specific Directions</label>
+            <textarea placeholder="Specific directions of encampment" rows="8" id="direction" class="form-input--border"></textarea>
+            <p class="contactError" id="directionError"></p>
+        </div>
+
+        <div class="form-submit">
+            <button id="submit" type="submit">SUBMIT</button>
+        </div>
+        </form>
+    </div>
+<script src="/public/js/form.js"></script>
+</body>
+</html>

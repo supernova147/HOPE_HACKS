@@ -1,0 +1,193 @@
+/* CSS FOR FORM PAGE */
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: "Space Grotesk";
+}
+
+body {
+    background-color: #ECF8FF;
+}
+
+input {
+    box-shadow: grey 0.1rem;
+    border-radius: 0.2rem;
+    padding: 0.7rem;
+    border: 0.15rem rgb(179, 179, 179) solid;
+}
+
+input::placeholder {
+    color:#b1b1b1
+}
+
+select {
+    box-shadow: grey 0.1rem;
+    border-radius: 0.2rem;
+    padding: 0.7rem;
+    border: 0.15rem rgb(179, 179, 179) solid;
+}
+
+label {
+    text-indent: 0.4rem;
+}
+
+.contactError {
+    color: red;
+    font-size: 0.85rem;
+}
+/* Form Heading & Description MOBILE*/
+.form-content {
+    margin: 0 auto;
+    padding: 1rem;
+    text-align: center;
+    align-content: center;
+    box-sizing: border-box;
+}
+
+.form-content h {
+    text-align: center;
+}
+
+.form-content p {
+    padding: 1rem;
+    border-bottom: 0.33rem solid #0D3B66;
+}
+
+/* Form Content MOBILE*/
+.form {
+    display: grid;
+    width: 85%;
+    margin: 0 auto;
+    grid-template-columns: repeat(1,1fr);
+    gap: 0;
+    margin-bottom: 2.5rem;
+    align-items: start;
+}
+
+.form-identity {
+    display: grid;
+    padding: 1rem;
+
+    box-sizing: border-box;
+    gap: 1rem;
+}
+
+.form-location {
+    display: grid;
+    padding: 1rem;
+    box-sizing: border-box;
+}
+
+.form-location label {
+    margin-bottom: 1rem;
+}
+
+.form-location--2 {
+    display: flex;
+    padding: 0rem;
+    box-sizing: border-box;
+    gap:0;
+}
+
+#address {
+    border-bottom: 0;
+    border-bottom-left-radius: 0rem;
+    border-bottom-right-radius: 0rem;
+    box-shadow: #cdcdcd 0.05rem 0.05rem 0.05rem;
+}
+#state{
+    border-top-left-radius: 0rem;
+    border-top-right-radius: 0rem;
+    border-bottom-left-radius: 0rem;
+    border-bottom-right-radius: 0rem;
+    box-shadow: #cdcdcd 0.05rem 0.05rem 0.05rem;
+}
+#city {
+    width: 70%;
+    border-top: 0;
+    box-shadow: #cdcdcd 0.05rem 0.05rem 0.05rem;
+    border-top-left-radius: 0rem;
+    border-top-right-radius: 0rem;
+    border-bottom-right-radius: 0rem;
+}
+
+#zip {
+    width: 30%;
+    border-left: 0;
+    border-top: 0;
+    border-top-left-radius: 0rem;
+    border-top-right-radius: 0rem;
+    border-bottom-left-radius: 0rem;
+    box-shadow: #cdcdcd 0.05rem 0.05rem 0.05rem;
+}
+
+.form-directions {
+    display: grid;
+    padding: 1rem;
+    box-sizing: border-box;
+    gap: 1rem;
+}
+
+#direction {
+    text-align: left;
+    box-shadow: grey 0.1rem;
+    border-radius: 0.2rem;
+    padding: 0.7rem;
+    border: 0.15rem rgb(179, 179, 179) solid;
+}
+
+/* Form Input Style MOBILE */
+.form-identity input {
+    border-radius: 0.33rem grey;
+}
+.form-input--border {
+    box-shadow: #cdcdcd 0.05rem 0.05rem 0.05rem;
+}
+
+label {
+    font-weight: bold;
+}
+
+.form-submit {
+    margin: 0 auto;
+    border-radius: 0.33rem;
+    color: white;
+    background-color: green;
+    width: 93%;
+}
+
+#submit {
+    height: 2.5rem;
+    font-size: 1rem;
+    border-radius: 0.33rem;
+    border: 0;
+    width: 100%;
+    color: white;
+    background-color: #218380;
+    box-shadow: #000000 0.1rem 0.1rem 0.1rem;
+    will-change: transform;
+}
+
+#submit:hover {
+    transition: transform 150ms ease, background-color 200ms ease;
+    transform: scale(1.05);
+    background-color: #0D3B66;
+}
+
+/* DESKTOP CSS FORMAT */
+@media screen and (min-width: 800px) { 
+
+/* Form Content DESKTOP*/
+
+.form-content {
+    max-width: 50%;
+    margin: 0 auto;
+
+}
+
+.form {
+    width: 50%;
+}
+
+}
