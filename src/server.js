@@ -1,7 +1,9 @@
 require('dotenv').config(); // Have to install dotenv in order to use variables inside .env file
 const express = require('express');
 const cors = require('cors');
+const {getClinics} = require('js/clinic.js');
 const path = require('path');
+const { match } = require('assert');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -31,6 +33,24 @@ app.get('/form', (req, res) => {
         if (err) throw err;
         res.json(result);
     });
+});
+
+app.get('/health', (_req, res) => res.json({ok:true}));
+
+app.get('/api/clinics', async(req,res)=> {
+    try{
+        const nameLike = req.query.name || undefined;
+        const county = req.query.county || undefined;
+        const services = req.query.services ? req.query.services.split(,).map(s => s.trim()).filter(Boolean) : [];
+        const matchMode = req.query.match === 'all' ? 'all' : 'any';
+        const limit = parseInt(req.query.limit, 10) || 200;
+        const offset = parseInt(req.query.offset, 10) || 0;
+
+        const data = await getClinics({nameLike, county, services, matchMode, limit, offset});
+        res.json(data);
+    } catch (err){
+        res.status(500).json ({error: err.message});
+    }
 });
 
 app.listen(PORT, () => {
