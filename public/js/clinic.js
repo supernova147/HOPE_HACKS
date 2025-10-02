@@ -42,13 +42,13 @@ function safeSql(s = ''){
     return String(s).replace(/'/g,"''");
 }
 
-function buildWhere({nameLike, county, services, matchMode}){
+function buildWhere({nameLike, county, services, matchMode = 'any'}){
     const parts = ['1=1']; //default filtering
     if (nameLike) parts.push(`UPPER(facility) LIKE UPPER ('%${safeSql(nameLike)}%')`);
     if (county) parts.push(`UPPER(fcounty) LIKE UPPER ('%${safeSql(county)}%')`);
-    if (services?.length){
+    if (services.length){
         const checks = services.map(f => `UPPER(${f})= 'Y'`);
-        parts.push(`${checks.join(matchMode == 'all' ? 'AND' : 'OR')})`);
+        parts.push(`${checks.join(matchMode === 'all' ? 'AND' : 'OR')})`);
     }
     return parts.join('AND');
 }
