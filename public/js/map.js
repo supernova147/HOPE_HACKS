@@ -41,6 +41,8 @@
 //         darlingHarbour: { lat: -33.87488, lng: 151.1987113 },
 //         barangaroo: { lat: -33.8605523, lng: 151.1972205 },
 //     };
+// }
+
 //     const markers = [];
 //     for (const location in locations) {
 //         const markerOptions = {
@@ -58,6 +60,14 @@
 // DOCUMENTATION: https://developers.google.com/maps/documentation/javascript/load-maps-js-api#migrate-to-dynamic \\
 let map;
 const defaultCoor = { lat: 35.227085, lng: -80.843124 }; // default center coordinates: Charlotte, NC
+const NCbounds = {
+    // W-S-E-N: -84.321869 | 33.842316 | -75.460621 | 36.588117
+    // -84.32178200052,33.85116926668266,-75.45981513195132,36.5881334409244
+    north: 36.59,
+    south: 33.85,
+    west: -84.33,
+    east: -75.46,
+};
 const markers = [];
 let userMarker;
 // NOTE: markers[0] will always house the user marker as it is the first marker rendered
@@ -66,7 +76,11 @@ const initMap = async () => {
     const { Map } = await google.maps.importLibrary('maps');
     map = new Map(document.getElementById('map'), {
         center: defaultCoor,
-        zoom: 8,
+        zoom: 12,
+        restriction: {
+            latLngBounds: NCbounds,
+            strictBounds: true,
+        },
         mapId: 'a23b767cb32962acd3094bd2',
     });
 
@@ -89,16 +103,43 @@ const addMarker = async (coor) => {
 const geocode = async (address) => {
     const { Geocoder } = await google.maps.importLibrary('geocoding');
     const geocoder = new Geocoder();
-    geocoder.geocode({ address: address }, (res, stat) => {
+    geocoder.geocode({ address: address }, async (res, stat) => {
         if (stat === google.maps.GeocoderStatus.OK) {
+            console.log(res);
+            const location = res[0];
             const coor = {
-                lat: res[0].geometry.location.lat(),
-                lng: res[0].geometry.location.lng(),
+                lat: location.geometry.location.lat(),
+                lng: location.geometry.location.lng(),
             };
             // prettier-ignore
             console.log(`New coordinates: ${coor}`);
             userMarker.position = coor;
             map.setCenter(coor);
+
+            const locationType = location.geometry.location_type;
+            let city;
+            if (locationType === 'ROOFTOP') {
+                city = location.address_components[2].long_name;
+            } else if (locationType === 'APPROXIMATE') {
+                city = location.address_components[0].long_name;
+            }
+
+            await fetch('/clinics', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ city }),
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    console.log(data);
+                    data.forEach((e) => {
+                        const { x: lat, y: lng } = e.geometry;
+                        addMarker({ lat, lng });
+                    });
+                })
+                .catch((err) => console.error(err));
         } else {
             console.error(
                 `Geocode was not successful for the following reason: ${stat}`
@@ -134,7 +175,21 @@ const loadGoogleMaps = async () => {
         await loadAPI(config.MAPS_API_KEY);
 
         console.log('Google Maps API loaded, now initializing map...');
-        await initMap();
+        const renderedMap = await initMap();
+
+        // Sending viewport's bounds (coordinates) to use to filter query from med facility API
+        // const mapViewportBound = await renderedMap.getBounds();
+        // const storingBounds = await fetch('/config', {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //     },
+        //     body: JSON.stringify(mapViewportBound),
+        // });
+        // if (!storingBounds.ok)
+        //     throw new Error(`HTTP error! status: ${response.status}`);
+        // const storingRes = await storingBounds.json();
+        // console.log(storingRes);
     } catch (err) {
         console.log('Failed to load API key:', err);
     }

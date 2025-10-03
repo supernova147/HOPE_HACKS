@@ -1,15 +1,14 @@
 require('dotenv').config(); // Have to install dotenv in order to use variables inside .env file
 const express = require('express');
 const cors = require('cors');
-const {getClinics} = require('js/clinic.js');
+const { fetchFacilities } = require('./clinic.js');
 const path = require('path');
-const { match } = require('assert');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(cors());
-
+app.use(express.json());
 app.use(express.static(path.join(__dirname, '../public')));
 
 app.get('', (req, res) => {
@@ -35,21 +34,15 @@ app.get('/form', (req, res) => {
     });
 });
 
-app.get('/health', (_req, res) => res.json({ok:true}));
+// app.get('/health', (_req, res) => res.json({ ok: true }));
 
-app.get('/api/clinics', async(req,res)=> {
-    try{
-        const nameLike = req.query.name || undefined;
-        const county = req.query.county || undefined;
-        const services = req.query.services ? req.query.services.split(,).map(s => s.trim()).filter(Boolean) : [];
-        const matchMode = req.query.match === 'all' ? 'all' : 'any';
-        const limit = parseInt(req.query.limit, 10) || 200;
-        const offset = parseInt(req.query.offset, 10) || 0;
-
-        const data = await getClinics({nameLike, county, services, matchMode, limit, offset});
-        res.json(data);
-    } catch (err){
-        res.status(500).json ({error: err.message});
+app.post('/clinics', async (req, res) => {
+    try {
+        // console.log(req.body);
+        const city = req.body.city;
+        res.json(await fetchFacilities(city));
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to fetch data from source' });
     }
 });
 
