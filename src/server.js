@@ -3,7 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const fetchFacilities = require('./clinic.js');
 const path = require('path');
-const pool = require('./db.js');
+const { pool } = require('./db');  
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -12,7 +12,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../public')));
 
-app.get('', (req, res) => {
+app.get('', (req, res) => { 
     console.log('Server connected to the port');
     res.sendFile(path.join(__dirname, '../public/index.html'));
 });
@@ -27,8 +27,55 @@ app.get('/config', (req, res) => {
     res.json({ MAPS_API_KEY: process.env.MAPS_API_KEY });
 });
 
-app.get('/form', async (req, res) => {
-    // This will be the route housing our data from MySQL
+app.post('/api/data', async (req, res) => { 
+    // Handler for sending data to the DB 
+    const { //Form information from frontend
+            fullnameInput, 
+            phoneInput, 
+            emailInput, 
+            addressInput, 
+            stateInput, 
+            cityInput, 
+            zipInput, 
+            directionInput 
+            } = req.body; 
+
+        let conn;
+    try {
+      conn = await pool.getConnection();
+      await conn.beginTransaction(); 
+      // ^ If for any reason, anything is invalid beginTransac helps to prevent data from entering the DB.
+
+      const [personResult] = await conn.execute( //inserting person info
+          `INSERT INTO personInfo (fullName, phoneNum, email)
+          VALUES (?, ?, ?)`, // ? acts as another defenese against SQL injections; also values are assigned in order.
+          // Values will be 'translated' to a string value, preventing SQL injection;
+          [fullnameInput, phoneInput || null, emailInput]
+      );
+      const submissionID = personResult.insertId;//foreign key so both tables can be linked
+
+      await conn.execute( //inserting location info
+          `INSERT INTO locationInfo (submissionID, address, city, state, zipcode, directions)
+          VALUES (?, ?, ?, ?, ?, ?)`,
+          [
+          submissionID, 
+          addressInput || null,
+          cityInput || null,
+          (stateInput || '').toUpperCase() || null, //
+          zipInput || null,
+          directionInput || null,
+          ]
+      );
+      
+      await conn.commit();
+      return res.status(201).json({ ok: true, submissionID });
+    } catch (err) {
+      try { await conn.rollback(); } catch {}
+      console.error('SERVER ERROR: ', {
+          code: err.code, message: err.message, sqlMessage: err.sqlMessage, sql: err.sql, stack: err.stack
+      });
+      return res.status(500).json({ error: 'server', code: err.code, msg: err.sqlMessage || err.message });
+    }
 });
 
 app.post('/clinics', async (req, res) => {

@@ -53,7 +53,25 @@ label {
     padding: 1rem;
     border-bottom: 0.33rem solid #0D3B66;
 }
-
+#form-popup {
+    background-color: #218380;
+    text-align: center;
+    color: #ECF8FF;
+    margin: 0 auto;
+    display: block;
+    box-shadow: grey 0.1rem;
+    border-radius: 0.2rem;
+    padding: 0.7rem;
+    border: 0.15rem rgb(179, 179, 179) solid;
+}
+#close {
+    display: flex;
+    margin-left: 98%;
+    margin-bottom: 1rem;
+    box-shadow: grey 0.1rem;
+    padding: 0rem;
+    border: 0.15rem rgb(179, 179, 179) solid;
+}
 /* Form Content MOBILE*/
 .form {
     display: grid;
