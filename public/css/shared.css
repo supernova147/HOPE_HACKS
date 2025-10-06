@@ -61,6 +61,10 @@ a {
   border-radius: 5rem;
 }
 
+#hbhLogoHead__nav {
+  height: 5.5rem;
+}
+
 /* Footer */
 :root {
   --navy:#0D3B66;
@@ -243,14 +247,14 @@ body{
   }
 
   .nav-menu {
-    position: fixed;
-    top: 7rem;
+    position: absolute;
+    top: 6.25rem;
     right: 0;
     flex-direction: column;
     background-color: #1D8A99;
     width: 100%;
-    border-bottom-left-radius: 3rem;
-    border-bottom-right-radius: 3rem;
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
     text-align: center;
     transition: transform 0.3s ease-in-out;
     box-shadow: 0 10px 27px rgba(0, 0, 0, 0.05);
@@ -286,5 +290,9 @@ body{
 
   .burger.active .bar:nth-child(3) {
     transform: translateY(-8px) rotate(-45deg);
+  }
+
+  #hbhLogoHead__nav {
+  height: 4rem;
   }
 }

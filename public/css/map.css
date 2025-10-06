@@ -1,28 +1,26 @@
 #mapHead__section {
-    font-size: 1.5em;
-    margin-bottom: 2rem;
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
 }
 
 .input__section {
     text-align: center;
-    margin: 1rem auto;
-    margin-bottom: 2rem;
-    max-width: 70%;
+    margin: 1rem auto 1rem auto;
+    max-width: 50%; /* matches form page width */
 }
 
 /* Inputs */
 .inputBox__input {
-    height: 3rem;
+    height: 2.5rem; /* closer to form page */
     width: 100%;
-    border-radius: 0.5rem;
+    border-radius: 0.33rem;
     padding: 0.7rem;
     border: 0.15rem #b3b3b3 solid;
     margin-bottom: 1rem;
-    font-size: 2rem;
+    font-size: 1rem; /* matches form input font */
     outline: none;
-    box-shadow: grey 0.1rem;
+    box-shadow: #cdcdcd 0.05rem 0.05rem 0.05rem;
     transition: border-color 0.2s ease;
-
 }
 
 .inputBox__input:focus {
@@ -40,29 +38,36 @@
     margin-bottom: 0;
 }
 
-#mapButton__button {
-    width: 3rem;
-    height: 3rem;
-    border: 1px solid #b3b3b3;
-    border-radius: 0.5rem;
-    background-size: 1.25rem;
+#map__searchBtn {
+    width: 2.5rem;   /* scaled to form submit button height */
+    height: 2.5rem;
+    border: 0.1rem solid #b3b3b3;
+    border-radius: 0.33rem;
+    background-size: 1rem;
     cursor: pointer;
     transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
-#mapButton__button:hover {
+#map__searchBtn:hover {
     background-color: #eaeaea;
     border-color: #999;
 }
 
 .map__section {
-    background-color: #31842c;
-    padding: 50%;
+    padding-top: 1rem;
+    border-radius: 1.5rem;
 }
 
-@media only screen and (max-width: 768px) {
-.map__section {
-    background-color: #31842c;
-    padding: 50%;
+#map {
+    height: 100vh;
+    width: 100%;
 }
+
+@media only screen and (max-width: 48rem) {
+    .input__section {
+        max-width: 100%;
+        margin: 1rem 2rem 1rem 2rem;
+
+    }
+
 }
