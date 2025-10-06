@@ -102,4 +102,3 @@ app.get('/api/clinics', async(req,res)=> {
 app.listen(PORT, () => {
     console.log(`Server running at ${PORT}`);
 });
-
