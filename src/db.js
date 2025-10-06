@@ -1,17 +1,11 @@
-require ('dotenv').config({ path: require('path').join(__dirname, '..', '.env') }); // Helps db.js find .env file
-
-// [ Testing .env Connection ]
-// console.log('env Test:', {
-//   host: process.env.DB_HOST,
-//   user: process.env.DB_USER,
-//   name: process.env.DB_NAME
-// });
+/* Database Connection */
+require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') }); // Have to install dotenv in order to use variables inside .env file
 
 const mysql = require("mysql2");
 const fs = require ('fs');
 const path = require ('path');
 
-const dbConnection = mysql.createConnection({
+const pool = mysql.createPool({ // Connection to DB - changed to pool 
   host: process.env.DB_HOST,
   port: process.env.DB_PORT,
   user: process.env.DB_USER,
@@ -19,21 +13,7 @@ const dbConnection = mysql.createConnection({
   password: process.env.DB_PW,
   ssl: { 
     ca: fs.readFileSync(path.join(__dirname, 'ca.pem')),
-    rejectUnauthorized: true }
-});
+    rejectUnauthorized: true }  
+}).promise(); 
 
-dbConnection.connect((err) => {
-    if (err) throw err;
-    console.log('Connected to 1st-Party API! Hallelujah!!');
-})
-
-/*[TESTED CONNECTION]*/
-dbConnection
-    .promise()
-    .query('SHOW TABLES;')
-    .then(([rows, fields]) => {
-        console.log('Tables:', rows)
-    })
-    .catch(err => console.error(err));
-
-module.exports = dbConnection;
+module.exports = { pool };

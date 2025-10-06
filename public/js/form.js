@@ -1,5 +1,5 @@
 // For Form Validation
-console.log('JS connected');
+console.log('JS connected'); //test
 const fullname = document.getElementById('name');
 const phone = document.getElementById('phone');
 const email = document.getElementById('email');
@@ -22,11 +22,11 @@ let directionError = document.getElementById('directionError');
 const form = document.getElementById('contact');
 
 // Regex to check for valid inputs.
-
 const emailRegex = /^[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+(?:\.[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+)*@(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+[A-Za-z]{2,}$/i;
 const phoneRegex = /^(?:\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4}))$/;
 const nameRegex = /^[a-zA-Z\s'-]+$/;
 const addressRegex = /^(?=.*\d)[A-Za-z0-9 .,'\-#]{5,100}$/;
+const commentRegex = /^(?=.*[\p{L}\p{N}])[\p{L}\p{N}\s'.,!?()"%-:;]{1,300}$/u;
 
 //Setting valid inputs as false by default.
 let nameValid = false;
@@ -35,6 +35,22 @@ let emailValid = false;
 
 let locationValid = false;
 let directionValid = false;
+
+const userInput = {
+        fullnameInput: '',
+        phoneInput: '',
+        emailInput: '',
+
+        addressInput: '',
+        stateInput: '',
+        cityInput: '',
+        zipInput: '',
+
+        directionInput: ''
+};
+
+const jsonString = JSON.stringify(userInput);
+// const document.getElementById('form-popup')
 
 function validation() {
     // For each section of the form, regexs were used to check, as well as blank inputs; else the result will be true.
@@ -73,8 +89,8 @@ function validation() {
         locationValid = true;
     }
 
-    if (direction.value == '' || direction.value.length < 10) {
-        directionError.innerHTML = 'Please enter at least 10 characters.';
+    if (!commentRegex.test(direction.value.trim()) || direction.value == '' || direction.value.length < 10) {
+        directionError.innerHTML = 'Please enter at least 10 characters. Only letters and numbers.';
         directionValid = false;
     }
     else {
@@ -85,15 +101,43 @@ function validation() {
 }
 
 // FORM VALIDATION - INCLUDE REGEX & DROP DOWN.
-form.addEventListener('submit', (event) => {
+form.addEventListener('submit', async (event) => {
     event.preventDefault();
+
     validation();
     if (emailValid == false || nameValid == false || phoneValid == false || locationValid == false || directionValid == false) {
-        event.preventDefault();
         console.log('form info is not valid');
+        return;
     }
     else {
         console.log('Successful form submission.');
+
+        userInput.fullnameInput = `${fullname.value}`;
+        userInput.phoneInput = `${phone.value}`;
+        userInput.emailInput = `${email.value}`;
+
+        userInput.addressInput = `${address.value}`;
+        userInput.stateInput = `${state.value}`;
+        userInput.cityInput = `${city.value}`;
+        userInput.zipInput = `${zip.value}`;
+
+        userInput.directionInput = `${direction.value}`;
+        // console.log(userInput);
+        // Sending successful submission & its data to the backend server.
+    try {
+    const res = await fetch('/api/data', {  
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userInput),
+    });
+
+    if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || `Request failed: ${res.status}`);
+    }
+
+        const data = await res.json();
+        console.log('Server accepted:', data);
 
         fullname.value = '';
         phone.value = '';
@@ -105,7 +149,11 @@ form.addEventListener('submit', (event) => {
         zip.value = '';
 
         direction.value = ''; // check for server validaton just in case of a SQL injecition getting through.
+    } catch (e) {
+        console.error('Send failed:', e);
+        alert(e.message || 'Could not send data. Try again.');
     }
+}
 });
 
-
+// form-popup.addEventListener including logic for the form pop up.

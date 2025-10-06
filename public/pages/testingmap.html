@@ -48,82 +48,75 @@
             <button type="submit" id="map__searchBtn">Search</button>
         </form>
         <div id="map"></div>
+        <div id="map__filter-section">
+            <button id="map__filter-btn">
+                <span class="material-symbols-outlined"> tune </span>
+                Filter
+            </button>
+            <form id="map__filter-form">
+                <button id="map__close-filter-btn">
+                    <i class="material-symbols-outlined"> close </i>
+                </button>
 
-        <footer class="site-footer" aria-labelledby="footer-heading">
-        <!-- Main footer content -->
-          <div class="footer-main">
-          <!-- Dropdown menus -->
-            <nav class="footer-links" aria-label="Footer navigation">
-
-               <!-- About dropdown -->
-                <div class="footer-dropdown">
-                    <button class="fd-toggle" aria-expanded="false" aria-controls="fd-about">
-                        <span class="fd-label">About Us</span>
-                            <svg class="fd-caret" viewBox="0 0 24 24" aria-hidden="true">
-                              <path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2"/>
-                            </svg>
-                      </button>
-                      <ul id="fd-about" class="fd-menu" hidden>
-                        <li><a href="#">Our Story</a></li>
-                        <li><a href="#">Contact</a></li>
-                      </ul>
+                <div id="filter-modal__facility-type">
+                    <label class="filter-modal__label" for="facility-type">
+                        Facility Type
+                    </label>
+                    <select id="facility-type__select" name="facility-type">
+                        <option value="">Select facility type</option>
+                        <option value="Home Care">Home Care</option>
+                        <option value="Family Care Home">
+                            Family Care Home
+                        </option>
+                        <option value="Home for the Aged">
+                            Home for the Aged
+                        </option>
+                        <option value="Hospice">Hospice</option>
+                        <option value="Hospital">Hospital</option>
+                        <option value="Mental Health Homes">
+                            Mental Health Homes
+                        </option>
+                        <option value="Nursing Home Facility">
+                            Nursing Home Facility
+                        </option>
+                        <option value="Nursing Pool">Nursing Pool</option>
+                        <option value="Cardiac Rehab Program">
+                            Cardiac Rehab Program
+                        </option>
+                        <option value="Ambulatory Surgery">
+                            Ambulatory Surgery
+                        </option>
+                        <option value="Mental Health Hospital">
+                            Mental Health Hospital
+                        </option>
+                    </select>
                 </div>
 
-                <!-- Programs dropdown -->
-                <div class="footer-dropdown">
-                  <button class="fd-toggle" aria-expanded="false" aria-controls="fd-programs">
-                    <span class="fd-label">Programs</span>
-                    <svg class="fd-caret" viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2"/>
-                    </svg>
-                  </button>
-                  <ul id="fd-programs" class="fd-menu" hidden>
-                    <li><a href="#">Clinic Locator</a></li> <!--map & clinic locator-->
-                    <li><a href="#">Community Partners</a></li>
-                    <li><a href="#">Volunteer</a></li>
-                  </ul>
+                <div id="filter-modal__icf">
+                    <input type="checkbox" id="icf__checkbox" name="icf" />
+                    <label class="filter-modal__label" for="icf"
+                        >Intermediate Care Facility</label
+                    >
                 </div>
 
-      <!-- Resources dropdown -->
-      <div class="footer-dropdown">
-        <button class="fd-toggle" aria-expanded="false" aria-controls="fd-resources">
-          <span class="fd-label">Resources</span>
-          <svg class="fd-caret" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2"/>
-          </svg>
-        </button>
-        <ul id="fd-resources" class="fd-menu" hidden>
-          <li><a href="faqs.html">FAQs</a></li>
-          <li><a href="support.html">Support</a></li>
-        </ul>
-      </div>
-    </nav>
+                <div id="filter-modal__saeligible">
+                    <input
+                        type="checkbox"
+                        id="saeligible__checkbox"
+                        name="saeligible"
+                    />
+                    <label class="filter-modal__label" for="saeligible"
+                        >Special Assistance Eligible (Adult Care)</label
+                    >
+                </div>
 
-    <!-- Social + Donate block -->
-        <div class="social-donate">
-                <ul class="social">
-                    <li><a href="https://www.facebook.com/"><img src="images/facebook.svg"></a></li> 
-                    <li><a href="https://x.com/"><img src="images/x-twitter.svg"></a></li>
-                    <li><a href="https://www.instagram.com/"><img src="images/instagram.svg"></a></li>
-                </ul>
-                <!-- <a class="donate-btn" href="#">Donate</a> -->
-            </div>
-         </div>
-
-  <!-- Footer bottom (brand + legal) -->
-        <div class="footer-bottom">
-          <p class="brand">© 2025 Homebase Health</p>
-          <ul class="legal">
-            <li><a href="#">Donate</a></li>
-            <li><a href="#"> Non-Discrimination and Accessibility Notice</a></li>
-            <li><a href="#">Accessibility Notice </a></li>
-            <li><a href="#">Privacy Policy</a></li>
-            <li><a href="#">Terms &amp; Conditions</a></li>
-          </ul>
+                <button type="submit" id="map__filter-submit">
+                    Show Facilities
+                </button>
+            </form>
         </div>
-      </footer>
 
-        <script src="../js/map.js"></script>
-        <script src="../js/script.js"></script>
+        <script type="module" src="../js/map.js"></script>
+        <script type="module" src="../js/filter.js"></script>
     </body>
 </html>
