@@ -1,6 +1,7 @@
 require('dotenv').config(); // Have to install dotenv in order to use variables inside .env file
 const express = require('express');
 const cors = require('cors');
+const {getClinics} = require('js/clinic.js');
 const path = require('path');
 const mysql = require("mysql2");
 
@@ -84,6 +85,24 @@ app.post('/api/data', async (req, res) => { // Handler for sending data to the D
         code: err.code, message: err.message, sqlMessage: err.sqlMessage, sql: err.sql, stack: err.stack
     });
     return res.status(500).json({ error: 'server', code: err.code, msg: err.sqlMessage || err.message });
+    }
+});
+
+app.get('/health', (_req, res) => res.json({ok:true}));
+
+app.get('/api/clinics', async(req,res)=> {
+    try{
+        const nameLike = req.query.name || undefined;
+        const county = req.query.county || undefined;
+        const services = req.query.services ? req.query.services.split(,).map(s => s.trim()).filter(Boolean) : [];
+        const matchMode = req.query.match === 'all' ? 'all' : 'any';
+        const limit = parseInt(req.query.limit, 10) || 200;
+        const offset = parseInt(req.query.offset, 10) || 0;
+
+        const data = await getClinics({nameLike, county, services, matchMode, limit, offset});
+        res.json(data);
+    } catch (err){
+        res.status(500).json ({error: err.message});
     }
 });
 
