@@ -4,6 +4,10 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Testing Map</title>
+        <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=close,tune"
+        />
 
         <style>
             #map {
@@ -14,12 +18,80 @@
     </head>
     <body>
         <h1>My Google Maps Demo</h1>
-        <form id="map__searchForm" action="/clinics" method="post">
+        <form id="map__searchForm">
             <input type="text" id="map__inputBar" name="address" />
             <button type="submit" id="map__searchBtn">Search</button>
         </form>
         <div id="map"></div>
+        <div id="map__filter-section">
+            <button id="map__filter-btn">
+                <span class="material-symbols-outlined"> tune </span>
+                Filter
+            </button>
+            <form id="map__filter-form">
+                <button id="map__close-filter-btn">
+                    <i class="material-symbols-outlined"> close </i>
+                </button>
 
-        <script src="../js/map.js"></script>
+                <div id="filter-modal__facility-type">
+                    <label class="filter-modal__label" for="facility-type">
+                        Facility Type
+                    </label>
+                    <select id="facility-type__select" name="facility-type">
+                        <option value="">Select facility type</option>
+                        <option value="Home Care">Home Care</option>
+                        <option value="Family Care Home">
+                            Family Care Home
+                        </option>
+                        <option value="Home for the Aged">
+                            Home for the Aged
+                        </option>
+                        <option value="Hospice">Hospice</option>
+                        <option value="Hospital">Hospital</option>
+                        <option value="Mental Health Homes">
+                            Mental Health Homes
+                        </option>
+                        <option value="Nursing Home Facility">
+                            Nursing Home Facility
+                        </option>
+                        <option value="Nursing Pool">Nursing Pool</option>
+                        <option value="Cardiac Rehab Program">
+                            Cardiac Rehab Program
+                        </option>
+                        <option value="Ambulatory Surgery">
+                            Ambulatory Surgery
+                        </option>
+                        <option value="Mental Health Hospital">
+                            Mental Health Hospital
+                        </option>
+                    </select>
+                </div>
+
+                <div id="filter-modal__icf">
+                    <input type="checkbox" id="icf__checkbox" name="icf" />
+                    <label class="filter-modal__label" for="icf"
+                        >Intermediate Care Facility</label
+                    >
+                </div>
+
+                <div id="filter-modal__saeligible">
+                    <input
+                        type="checkbox"
+                        id="saeligible__checkbox"
+                        name="saeligible"
+                    />
+                    <label class="filter-modal__label" for="saeligible"
+                        >Special Assistance Eligible (Adult Care)</label
+                    >
+                </div>
+
+                <button type="submit" id="map__filter-submit">
+                    Show Facilities
+                </button>
+            </form>
+        </div>
+
+        <script type="module" src="../js/map.js"></script>
+        <script type="module" src="../js/filter.js"></script>
     </body>
 </html>

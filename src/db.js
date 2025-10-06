@@ -1,16 +1,16 @@
-const mysql = require("mysql2");
+const mysql = require('mysql2/promise');
 
-const dbConnection = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  database: 'HopeHacks3', // Eddie filled this out ;)
-  password: 'password',
+const pool = mysql.createPool({
+    host: 'localhost',
+    user: 'root',
+    database: 'test',
+    password: 'password',
 });
 
-dbConnection.connect((err) => {
-    if (err) throw err;
-    console.log('Connected to MySQL');
-})
+// dbConnection.connect((err) => {
+//     if (err) throw err;
+//     console.log('Connected to MySQL');
+// });
 
 // dbConnection [TESTED CONNECTION]
 //     .promise()
@@ -19,4 +19,6 @@ dbConnection.connect((err) => {
 //         console.log(rows)
 //     })
 
-module.exports = dbConnection;
+module.exports = pool;
+
+// A database connection pool is a cache of database connections maintained by an application or a dedicated middleware service. Instead of opening and closing a new database connection for each request, which can be a resource-intensive and time-consuming operation, applications can borrow a connection from the pool, use it for their database operations, and then return it to the pool for reuse by other requests

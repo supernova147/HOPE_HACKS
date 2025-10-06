@@ -1,8 +1,9 @@
 require('dotenv').config(); // Have to install dotenv in order to use variables inside .env file
 const express = require('express');
 const cors = require('cors');
-const { fetchFacilities } = require('./clinic.js');
+const fetchFacilities = require('./clinic.js');
 const path = require('path');
+const pool = require('./db.js');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -26,23 +27,43 @@ app.get('/config', (req, res) => {
     res.json({ MAPS_API_KEY: process.env.MAPS_API_KEY });
 });
 
-app.get('/form', (req, res) => {
+app.get('/form', async (req, res) => {
     // This will be the route housing our data from MySQL
-    connection.query(`SELECT * FROM ${databaseName}`, (err, result) => {
-        if (err) throw err;
-        res.json(result);
-    });
 });
-
-// app.get('/health', (_req, res) => res.json({ ok: true }));
 
 app.post('/clinics', async (req, res) => {
     try {
-        // console.log(req.body);
-        const city = req.body.city;
-        res.json(await fetchFacilities(city));
+        const { city, userFilters } = req.body;
+        if (!city) {
+            return res.status(400).json({ error: 'City is required' });
+        }
+
+        const facilities = await fetchFacilities(city);
+        if (!facilities) {
+            return res
+                .status(500)
+                .json({ error: 'Failed to fetch facilities' });
+        }
+
+        let filteredFacilities = facilities;
+        if (userFilters) {
+            filteredFacilities = facilities.filter((facility) => {
+                const attributes = facility.attributes;
+                return (
+                    (!userFilters.stype ||
+                        attributes.stype === userFilters.stype) &&
+                    (!userFilters.icf || attributes.icf === userFilters.icf) &&
+                    (!userFilters.saeligible ||
+                        attributes.saeligible === userFilters.saeligible)
+                );
+            });
+        }
+
+        res.json(filteredFacilities);
     } catch (err) {
-        res.status(500).json({ error: 'Failed to fetch data from source' });
+        res.status(500).json({
+            error: 'Error fetching or filtering facilities in /clinics',
+        });
     }
 });
 

@@ -1,75 +1,15 @@
-// DOCUMENTATION: https://developers.google.com/codelabs/maps-platform/maps-platform-101-js#0 \\
-// const { Loader } = require('@googlemaps/js-api-loader');
-
-// const apiOptions = {
-//     api: MAPS_API_KEY,
-// };
-
-// const loader = new Loader(apiOptions);
-// loader.then(() => {
-//     console.log('Maps JS API loaded');
-//     const map = initMap();
-//     const markers = addMarkers(map);
-// });
-
-// const initMap = () => {
-//     const mapOptions = {
-//         center: { lat: -33.860664, lng: 151.208138 }, // example coordinates
-//         zoom: 8,
-//     };
-//     const mapContainer = document.getElementById('map');
-//     const map = new google.maps.Map(mapContainer, mapOptions);
-//     return map;
-// };
-
-// const addMarkers = (map) => {
-//     const locations = {
-//         // example locations
-//         operaHouse: { lat: -33.8567844, lng: 151.213108 },
-//         tarongaZoo: { lat: -33.8472767, lng: 151.2188164 },
-//         manlyBeach: { lat: -33.8209738, lng: 151.2563253 },
-//         hyderPark: { lat: -33.8690081, lng: 151.2052393 },
-//         theRocks: { lat: -33.8587568, lng: 151.2058246 },
-//         circularQuay: { lat: -33.858761, lng: 151.2055688 },
-//         harbourBridge: { lat: -33.852228, lng: 151.2038374 },
-//         kingsCross: { lat: -33.8737375, lng: 151.222569 },
-//         botanicGardens: { lat: -33.864167, lng: 151.216387 },
-//         museumOfSydney: { lat: -33.8636005, lng: 151.2092542 },
-//         maritimeMuseum: { lat: -33.869395, lng: 151.198648 },
-//         kingStreetWharf: { lat: -33.8665445, lng: 151.1989808 },
-//         aquarium: { lat: -33.869627, lng: 151.202146 },
-//         darlingHarbour: { lat: -33.87488, lng: 151.1987113 },
-//         barangaroo: { lat: -33.8605523, lng: 151.1972205 },
-//     };
-// }
-
-//     const markers = [];
-//     for (const location in locations) {
-//         const markerOptions = {
-//             map: map,
-//             position: locations[location],
-//         };
-//         const marker = new google.maps.Marker(markerOptions);
-//         markers.push(marker);
-//     }
-//     return markers;
-// };
-
-// module.exports = loader;
-
 // DOCUMENTATION: https://developers.google.com/maps/documentation/javascript/load-maps-js-api#migrate-to-dynamic \\
 let map;
 const defaultCoor = { lat: 35.227085, lng: -80.843124 }; // default center coordinates: Charlotte, NC
 const NCbounds = {
-    // W-S-E-N: -84.321869 | 33.842316 | -75.460621 | 36.588117
-    // -84.32178200052,33.85116926668266,-75.45981513195132,36.5881334409244
     north: 36.59,
     south: 33.85,
     west: -84.33,
     east: -75.46,
 };
-const markers = [];
+let markers = [];
 let userMarker;
+let openedInfoWindow;
 // NOTE: markers[0] will always house the user marker as it is the first marker rendered
 
 const initMap = async () => {
@@ -85,67 +25,137 @@ const initMap = async () => {
     });
 
     console.log('Maps JS API loaded');
-    userMarker = await addMarker(defaultCoor);
+    userMarker = await addUserMarker(defaultCoor);
+    markers.push(await renderFacilities('Charlotte'));
 };
 
-const addMarker = async (coor) => {
-    const { AdvancedMarkerElement } = await google.maps.importLibrary('marker');
-    const marker = new AdvancedMarkerElement({
-        map: map,
-        position: coor,
-        title: 'Charlotte',
+const addUserMarker = async (coor) => {
+    const { AdvancedMarkerElement, PinElement } =
+        await google.maps.importLibrary('marker');
+
+    const personImg = document.createElement('img');
+    personImg.src = new URL('../img/person.png', import.meta.url).href;
+    // IMG ATTRIBUTION: <a href="https://www.flaticon.com/free-icons/marker" title="marker icons">Marker icons created by juicy_fish - Flaticon</a>
+
+    const userPin = new PinElement({
+        glyph: personImg,
     });
-    console.log('Rendered marker: ', marker.position);
-    return marker;
+    // NOTICE! Change z-index to be on top of other markers
+    const userMarker = new AdvancedMarkerElement({
+        map,
+        position: coor,
+        content: personImg,
+        title: 'Marker',
+    });
+    // console.log('Rendered marker: ', userMarker.position);
+    return userMarker;
+};
+
+const addFacilityMarker = async (coor) => {
+    const { AdvancedMarkerElement } = await google.maps.importLibrary('marker');
+
+    const facilityMarker = new AdvancedMarkerElement({
+        map,
+        position: coor,
+        collisionBehavior:
+            google.maps.CollisionBehavior.OPTIONAL_AND_HIDES_LOWER_PRIORITY,
+        title: 'Marker',
+    });
+
+    // console.log('Rendered marker: ', facilityMarker.position);
+    return facilityMarker;
+};
+
+const addInfoBox = async (feature, marker) => {
+    const { InfoWindow } = await google.maps.importLibrary('maps');
+    const attributes = feature.attributes;
+
+    const contentString = `<h1 class="info-window__name">${attributes.facility}</h1>
+    <p class="info-window__type">${attributes.stype}</p>
+    <div class="info-window__contact>
+        <p class="info-window__contact-phone">Phone Number: ${attributes.fphone}</p>
+    </div>
+    <div class="info-window__location>
+        <p class="info-window__location-address">${attributes.address}</p>
+        <p class="info-window__location-city-state-zip">${attributes.scity} ${attributes.sstate} ${attributes.szip}</p>
+    </div>
+    <div class="info-window__services">
+        <p class="info-window__services-icf">${attributes.icf[1]}</p>
+        <p class="info-window__services-saeligible">${attributes.saeligible[1]}</p>
+    </div>`;
+
+    const infoWindow = new InfoWindow({
+        content: contentString,
+        ariaLabel: marker.attributes.facility,
+    });
+
+    marker.addEventListener('click', () => {
+        if (openedInfoWindow) openedInfoWindow.close();
+        infoWindow.open({
+            anchor: marker,
+            map,
+        });
+        openedInfoWindow = infoWindow;
+    });
 };
 
 // DOCUMENTATION: https://developers.google.com/maps/documentation/javascript/reference/geocoder \\
-const geocode = async (address) => {
+const geocode = async (address, userFilters = null) => {
     const { Geocoder } = await google.maps.importLibrary('geocoding');
     const geocoder = new Geocoder();
-    geocoder.geocode({ address: address }, async (res, stat) => {
-        if (stat === google.maps.GeocoderStatus.OK) {
-            console.log(res);
-            const location = res[0];
-            const coor = {
-                lat: location.geometry.location.lat(),
-                lng: location.geometry.location.lng(),
-            };
-            // prettier-ignore
-            console.log(`New coordinates: ${coor}`);
-            userMarker.position = coor;
-            map.setCenter(coor);
 
-            const locationType = location.geometry.location_type;
-            let city;
-            if (locationType === 'ROOFTOP') {
-                city = location.address_components[2].long_name;
-            } else if (locationType === 'APPROXIMATE') {
-                city = location.address_components[0].long_name;
-            }
-
-            await fetch('/clinics', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ city }),
-            })
-                .then((res) => res.json())
-                .then((data) => {
-                    console.log(data);
-                    data.forEach((e) => {
-                        const { x: lat, y: lng } = e.geometry;
-                        addMarker({ lat, lng });
-                    });
-                })
-                .catch((err) => console.error(err));
-        } else {
-            console.error(
-                `Geocode was not successful for the following reason: ${stat}`
-            );
-        }
+    // ISSUE: The API expects a callback, so have to make it promise-based
+    const res = await new Promise((resolve, reject) => {
+        geocoder.geocode({ address }, async (res, stat) => {
+            if (stat === google.maps.GeocoderStatus.OK) resolve(res);
+            else reject(`Geocode failed: ${stat}`);
+        });
     });
+
+    const location = res[0];
+    const coor = {
+        lat: location.geometry.location.lat(),
+        lng: location.geometry.location.lng(),
+    };
+
+    userMarker.position = coor;
+    map.setCenter(coor);
+
+    const locationType = location.geometry.location_type;
+    let city;
+    if (locationType === 'ROOFTOP') {
+        city = location.address_components[2].long_name;
+    } else if (locationType === 'APPROXIMATE') {
+        city = location.address_components[0].long_name;
+    }
+
+    await renderFacilities(city, userFilters);
+};
+
+const renderFacilities = async (city, userFilters = null) => {
+    try {
+        const fetchedFacilities = await fetch('/clinics', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ city, userFilters }),
+        });
+        const facilities = await fetchedFacilities.json();
+
+        markers.forEach((marker) => marker.setMap(null));
+        markers = [];
+
+        // Add markers for the filtered facilities
+        for (const facility of facilities) {
+            const { x: lng, y: lat } = facility.geometry;
+            const marker = await addFacilityMarker({ lat, lng });
+            await addInfoBox(facility, marker);
+            markers.push(marker);
+        }
+    } catch (err) {
+        console.error('Failed to get facilities:', err);
+    }
 };
 
 const loadAPI = (apiKey) => {
@@ -165,7 +175,6 @@ const loadAPI = (apiKey) => {
 };
 
 const loadGoogleMaps = async () => {
-    console.log('loadGoogleMaps() called');
     try {
         const res = await fetch('/config'); // fetching the API key served by Express in the /config route
         console.log('fetch /config response:', res.status);
@@ -175,37 +184,47 @@ const loadGoogleMaps = async () => {
         await loadAPI(config.MAPS_API_KEY);
 
         console.log('Google Maps API loaded, now initializing map...');
-        const renderedMap = await initMap();
-
-        // Sending viewport's bounds (coordinates) to use to filter query from med facility API
-        // const mapViewportBound = await renderedMap.getBounds();
-        // const storingBounds = await fetch('/config', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //     },
-        //     body: JSON.stringify(mapViewportBound),
-        // });
-        // if (!storingBounds.ok)
-        //     throw new Error(`HTTP error! status: ${response.status}`);
-        // const storingRes = await storingBounds.json();
-        // console.log(storingRes);
+        await initMap();
     } catch (err) {
         console.log('Failed to load API key:', err);
     }
 };
 
 window.addEventListener('DOMContentLoaded', () => {
-    console.log('DOMContentLoaded fired, starting loader...');
     loadGoogleMaps();
 
+    // Filtering Functionality
+    const filterForm = document.getElementById('map__filter-form');
+    const facilityTypeSelect = document.getElementById('facility-type__select');
+    const icfCheckbox = document.getElementById('icf__checkbox');
+    const saeligibleCheckbox = document.getElementById('saeligible__checkbox');
+
+    filterForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const userQuery =
+            document.getElementById('map__inputBar').value || 'Charlotte';
+
+        const userFilters = {
+            stype: facilityTypeSelect.value || undefined,
+            icf: icfCheckbox.checked ? 'T' : undefined,
+            saeligible: saeligibleCheckbox.checked ? 'T' : undefined,
+        };
+
+        console.log(userFilters);
+
+        await geocode(userQuery, userFilters); // Passing the address to geocode() and deciding whether to pass the filters or null, which makes filters optional and avoids sending an empty object to the backend
+    });
+
+    // Search Bar Functionality
     const searchForm = document.getElementById('map__searchForm');
     searchForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const userQuery = document.getElementById('map__inputBar').value;
-        const coor = await geocode(userQuery);
-        await addMarker(coor);
+        const userQuery =
+            document.getElementById('map__inputBar').value || 'Charlotte';
+        await geocode(userQuery);
     });
+
+    console.log(markers);
 });
 
 /*
