@@ -4,24 +4,28 @@ const cors = require('cors');
 const path = require('path');
 const mysql = require("mysql2");
 
-
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
-
 app.use(express.static(path.join(__dirname, '../public')));
 
-// const dbConnection = mysql.createConnection({
-//     host: 'localhost',
-//     user: 'root',
-//     database: 'HopeHacks3', // Eddie filled this out ;)
-//     password: 'password',
-// });
+    const dbConnection = mysql.createConnection({ // Connection to DB
+    host: 'localhost',  
+    user: 'root',  
+    database: 'HopeHacks3', // Eddie filled this out ;)
+    password: 'password',
+    });
 
+const db = dbConnection.promise();
 
-app.get('', (req, res) => {
+dbConnection.connect((err) => {
+    if (err) throw err;
+    console.log("Connected to MySQL");
+});
+//Routes 
+app.get('', (req, res) => { 
     console.log('Server connected to the port');
     res.sendFile(path.join(__dirname, '../public/index.html'));
 });
@@ -36,9 +40,9 @@ app.get('/config', (req, res) => {
     res.json({ MAPS_API_KEY: process.env.MAPS_API_KEY });
 });
 
-app.post('/api/data', async (req, res, next) => {
-    try {
-        const {
+app.post('/api/data', async (req, res) => { // Handler for sending data to the DB 
+        
+    const { //Form information from frontend
             fullnameInput, 
             phoneInput, 
             emailInput, 
@@ -48,22 +52,42 @@ app.post('/api/data', async (req, res, next) => {
             zipInput, 
             directionInput 
             } = req.body; 
+    try {
+    await db.beginTransaction(); 
+// ^ If for any reason, anything is invalid beginTransac helps to prevent data from entering the DB.
 
-        console.log('Received: ', req.body);
-        return res.status(202).json({ ok: true});
+    const [personResult] = await db.execute( //inserting person info
+        `INSERT INTO personInfo (fullName, phoneNum, email)
+        VALUES (?, ?, ?)`, // ? acts as another defenese against SQL injections; also values are assigned in order.
+        // Values will be 'translated' to a string value, preventing SQL injection;
+        [fullnameInput, phoneInput || null, emailInput]
+    );
+    const submissionID = personResult.insertId;//foreign key so both tables can be linked
+
+    await db.execute( //inserting location info
+        `INSERT INTO locationInfo (submissionID, address, city, state, zipcode, directions)
+        VALUES (?, ?, ?, ?, ?, ?)`,
+        [
+        submissionID, 
+        addressInput || null,
+        cityInput || null,
+        (stateInput || '').toUpperCase() || null, //
+        zipInput || null,
+        directionInput || null,
+        ]
+    );
+    await db.commit();
+    return res.status(201).json({ ok: true, submissionID });
     } catch (err) {
-        next(err);
+    try { await db.rollback(); } catch {}
+    console.error('SERVER ERROR: ', {
+        code: err.code, message: err.message, sqlMessage: err.sqlMessage, sql: err.sql, stack: err.stack
+    });
+    return res.status(500).json({ error: 'server', code: err.code, msg: err.sqlMessage || err.message });
     }
 });
-
-// app.get('/form', (req, res) => {
-//     // This will be the route housing our data from MySQL
-//     connection.query(`SELECT * FROM ${databaseName}`, (err, result) => {
-//         if (err) throw err;
-//         res.json(result);
-//     });
-// });
 
 app.listen(PORT, () => {
     console.log(`Server running at ${PORT}`);
 });
+
