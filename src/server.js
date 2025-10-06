@@ -3,29 +3,19 @@ const express = require('express');
 const cors = require('cors');
 const {getClinics} = require('js/clinic.js');
 const path = require('path');
-const mysql = require("mysql2");
+// const mysql = require("mysql2");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+const { pool } = require('./db');  
 
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../public')));
 
-    const dbConnection = mysql.createConnection({ // Connection to DB
-    host: 'localhost',  
-    user: 'root',  
-    database: 'HopeHacks3', // Eddie filled this out ;)
-    password: 'password',
-    });
+/* Routes Below */
 
-const db = dbConnection.promise();
-
-dbConnection.connect((err) => {
-    if (err) throw err;
-    console.log("Connected to MySQL");
-});
-//Routes 
 app.get('', (req, res) => { 
     console.log('Server connected to the port');
     res.sendFile(path.join(__dirname, '../public/index.html'));
@@ -53,11 +43,14 @@ app.post('/api/data', async (req, res) => { // Handler for sending data to the D
             zipInput, 
             directionInput 
             } = req.body; 
+
+        let conn;
     try {
-    await db.beginTransaction(); 
+    conn = await pool.getConnection();
+    await conn.beginTransaction(); 
 // ^ If for any reason, anything is invalid beginTransac helps to prevent data from entering the DB.
 
-    const [personResult] = await db.execute( //inserting person info
+    const [personResult] = await conn.execute( //inserting person info
         `INSERT INTO personInfo (fullName, phoneNum, email)
         VALUES (?, ?, ?)`, // ? acts as another defenese against SQL injections; also values are assigned in order.
         // Values will be 'translated' to a string value, preventing SQL injection;
@@ -65,7 +58,7 @@ app.post('/api/data', async (req, res) => { // Handler for sending data to the D
     );
     const submissionID = personResult.insertId;//foreign key so both tables can be linked
 
-    await db.execute( //inserting location info
+    await conn.execute( //inserting location info
         `INSERT INTO locationInfo (submissionID, address, city, state, zipcode, directions)
         VALUES (?, ?, ?, ?, ?, ?)`,
         [
@@ -77,10 +70,10 @@ app.post('/api/data', async (req, res) => { // Handler for sending data to the D
         directionInput || null,
         ]
     );
-    await db.commit();
+    await conn.commit();
     return res.status(201).json({ ok: true, submissionID });
     } catch (err) {
-    try { await db.rollback(); } catch {}
+    try { await conn.rollback(); } catch {}
     console.error('SERVER ERROR: ', {
         code: err.code, message: err.message, sqlMessage: err.sqlMessage, sql: err.sql, stack: err.stack
     });
