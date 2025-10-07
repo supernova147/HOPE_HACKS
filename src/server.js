@@ -18,7 +18,7 @@ app.get('', (req, res) => {
 });
 
 app.get('/map', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/pages/testingmap.html'));
+    res.sendFile(path.join(__dirname, '../public/map.html'));
 });
 
 app.get('/config', (req, res) => {

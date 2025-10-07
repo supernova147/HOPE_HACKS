@@ -8,12 +8,14 @@
         <link rel="stylesheet" href="css/map.css">
         <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link rel="icon" type="image/x-icon" href="img/HBHTab.png">
+
 
     </head>
     <body>
         <header class="header">
         <nav class="navbar">
-            <a href="index.html" class="headLogo__a"><img src="img/HBHprime.png" alt="HomeBase Health" height="70rem"></a>
+            <a href="index.html" class="headLogo__a"><img src="img/HBHprime.png" alt="HomeBase Health" id="hbhLogoHead__nav"></a>
             <ul class="nav-menu">
                 <li class="nav__li">
                     <a href="index.html" class="nav__a">Home</a>
@@ -37,14 +39,13 @@
         </header>
         <section class="input__section">
             <h1 id="mapHead__section">Locate Clinics Around NC</h1>
-            <input type="text" placeholder="Search..." class="inputBox__input">
-            <div class="search-row">
-                <input type="text" placeholder="Zip, City/State, Address" class="inputBox__input" >
-                <button id="mapButton__button"><i class="fas fa-search" style="color: #0D3b66; font-size: 2rem;"></i></button>
-            </div>
+            <form class="search-row" id="map__searchForm">
+                <input type="text" placeholder="Search..." class="inputBox__input" id="map__inputBar">
+                <button id="map__searchBtn"><i class="fas fa-search" style="color: #0D3b66; font-size: 1rem;"></i></button>
+            </form>
         </section>
         <section class="map__section">
-            <div class="map"></div>
+            <div id="map"></div>
         </section>
         <footer class="site-footer" aria-labelledby="footer-heading">
         <!-- Main footer content -->
@@ -99,9 +100,9 @@
     <!-- Social + Donate block -->
         <div class="social-donate">
                 <ul class="social">
-                    <li><a href="https://www.facebook.com/"><img src="images/facebook.svg"></a></li> 
-                    <li><a href="https://x.com/"><img src="images/x-twitter.svg"></a></li>
-                    <li><a href="https://www.instagram.com/"><img src="images/instagram.svg"></a></li>
+                    <li><a href="https://www.facebook.com/"><img src="images/facebook.svg" alt="FaceBook"></a></li> 
+                    <li><a href="https://x.com/"><img src="images/x-twitter.svg" alt="X/Twitter"></a></li>
+                    <li><a href="https://www.instagram.com/"><img src="images/instagram.svg" alt="Instagram"></a></li>
                 </ul>
                 <!-- <a class="donate-btn" href="#">Donate</a> -->
             </div>
