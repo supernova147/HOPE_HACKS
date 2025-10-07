@@ -22,76 +22,82 @@
             <input type="text" id="map__inputBar" name="address" />
             <button type="submit" id="map__searchBtn">Search</button>
         </form>
-        <div id="map"></div>
-        <div id="map__filter-section">
-            <button id="map__filter-btn">
-                <span class="material-symbols-outlined"> tune </span>
-                Filter
-            </button>
-            <form id="map__filter-form">
-                <button id="map__close-filter-btn">
-                    <i class="material-symbols-outlined"> close </i>
-                </button>
 
-                <div id="filter-modal__facility-type">
-                    <label class="filter-modal__label" for="facility-type">
-                        Facility Type
-                    </label>
-                    <select id="facility-type__select" name="facility-type">
-                        <option value="">Select facility type</option>
-                        <option value="Home Care">Home Care</option>
-                        <option value="Family Care Home">
-                            Family Care Home
-                        </option>
-                        <option value="Home for the Aged">
-                            Home for the Aged
-                        </option>
-                        <option value="Hospice">Hospice</option>
-                        <option value="Hospital">Hospital</option>
-                        <option value="Mental Health Homes">
-                            Mental Health Homes
-                        </option>
-                        <option value="Nursing Home Facility">
-                            Nursing Home Facility
-                        </option>
-                        <option value="Nursing Pool">Nursing Pool</option>
-                        <option value="Cardiac Rehab Program">
-                            Cardiac Rehab Program
-                        </option>
-                        <option value="Ambulatory Surgery">
-                            Ambulatory Surgery
-                        </option>
-                        <option value="Mental Health Hospital">
-                            Mental Health Hospital
-                        </option>
-                    </select>
-                </div>
-
-                <div id="filter-modal__icf">
-                    <input type="checkbox" id="icf__checkbox" name="icf" />
-                    <label class="filter-modal__label" for="icf"
-                        >Intermediate Care Facility</label
-                    >
-                </div>
-
-                <div id="filter-modal__saeligible">
-                    <input
-                        type="checkbox"
-                        id="saeligible__checkbox"
-                        name="saeligible"
-                    />
-                    <label class="filter-modal__label" for="saeligible"
-                        >Special Assistance Eligible (Adult Care)</label
-                    >
-                </div>
-
-                <button type="submit" id="map__filter-submit">
-                    Show Facilities
-                </button>
-            </form>
+        <div id="filter-modal__show-toggleBtn">
+            <input
+                type="checkbox"
+                id="org-markers__checkbox"
+                name="org-markers__toggle"
+                checked
+            />
+            <label class="filter-modal__label" for="org-markers__toggle">
+                Show Temporary Facilities
+            </label>
         </div>
+        <div id="map"></div>
+        <button id="map__filter-btn">
+            <span class="material-symbols-outlined"> tune </span>
+            Filter
+        </button>
+
+        <form id="map__filter-form">
+            <button id="map__close-filter-btn">
+                <i class="material-symbols-outlined"> close </i>
+            </button>
+
+            <div id="filter-modal__facility-type">
+                <label class="filter-modal__label" for="facility-type">
+                    Facility Type
+                </label>
+                <select id="facility-type__select" name="facility-type">
+                    <option value="">Select facility type</option>
+                    <option value="Home Care">Home Care</option>
+                    <option value="Family Care Home">Family Care Home</option>
+                    <option value="Home for the Aged">Home for the Aged</option>
+                    <option value="Hospice">Hospice</option>
+                    <option value="Hospital">Hospital</option>
+                    <option value="Mental Health Homes">
+                        Mental Health Homes
+                    </option>
+                    <option value="Nursing Home Facility">
+                        Nursing Home Facility
+                    </option>
+                    <option value="Nursing Pool">Nursing Pool</option>
+                    <option value="Cardiac Rehab Program">
+                        Cardiac Rehab Program
+                    </option>
+                    <option value="Ambulatory Surgery">
+                        Ambulatory Surgery
+                    </option>
+                    <option value="Mental Health Hospital">
+                        Mental Health Hospital
+                    </option>
+                </select>
+            </div>
+
+            <div id="filter-modal__icf">
+                <input type="checkbox" id="icf__checkbox" name="icf" />
+                <label class="filter-modal__label" for="icf"
+                    >Intermediate Care Facility</label
+                >
+            </div>
+
+            <div id="filter-modal__saeligible">
+                <input
+                    type="checkbox"
+                    id="saeligible__checkbox"
+                    name="saeligible"
+                />
+                <label class="filter-modal__label" for="saeligible"
+                    >Special Assistance Eligible (Adult Care)</label
+                >
+            </div>
+
+            <button type="submit" id="map__filter-submit">
+                Show Facilities
+            </button>
+        </form>
 
         <script type="module" src="../js/map.js"></script>
-        <script type="module" src="../js/filter.js"></script>
     </body>
 </html>
