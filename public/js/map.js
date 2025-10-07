@@ -159,16 +159,15 @@ const geocode = async (address, userFilters = null) => {
         lng: location.geometry.location.lng(),
     };
 
-    userMarker.position = coor;
+    if (coor) userMarker.position = coor;
     map.setCenter(coor);
 
-    const locationType = location.geometry.location_type;
     let city;
-    if (locationType === 'ROOFTOP') {
-        city = location.address_components[2].long_name;
-    } else if (locationType === 'APPROXIMATE') {
-        city = location.address_components[0].long_name;
-    }
+
+    location.address_components.forEach((e) => {
+        if (e.types[0] === 'locality') city = e.long_name;
+    });
+    console.log(city);
 
     await renderFacilities(city, userFilters);
     await renderOrgFacilities();
@@ -310,6 +309,12 @@ window.addEventListener('DOMContentLoaded', () => {
     const icfCheckbox = document.getElementById('icf__checkbox');
     const saeligibleCheckbox = document.getElementById('saeligible__checkbox');
 
+    document
+        .getElementById('map__close-filter-btn')
+        .addEventListener('click', (e) => {
+            e.preventDefault();
+        });
+
     filterForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const userQuery =
@@ -338,6 +343,29 @@ window.addEventListener('DOMContentLoaded', () => {
     document
         .getElementById('org-markers__checkbox')
         .addEventListener('change', toggleOrgMarkers);
+
+    document.getElementById('map__filter-btn').addEventListener('click', () => {
+        filterForm.classList.add('show');
+        document.getElementById('map__filter-overlay').classList.add('show');
+    });
+
+    document
+        .getElementById('map__close-filter-btn')
+        .addEventListener('click', () => {
+            filterForm.classList.remove('show');
+            document
+                .getElementById('map__filter-overlay')
+                .classList.remove('show');
+        });
+
+    document
+        .getElementById('map__filter-submit')
+        .addEventListener('click', () => {
+            filterForm.classList.remove('show');
+            document
+                .getElementById('map__filter-overlay')
+                .classList.remove('show');
+        });
 });
 
 /*

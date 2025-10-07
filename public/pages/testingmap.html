@@ -4,11 +4,16 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Testing Map</title>
-        <link rel="stylesheet" href="../css/shared.css">
-        <link rel="stylesheet" href="../css/map.css">
-        <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+        <link rel="stylesheet" href="../css/shared.css" />
+        <link rel="stylesheet" href="../css/map.css" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+            rel="stylesheet"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        />
 
         <style>
             #map {
@@ -19,28 +24,33 @@
     </head>
     <body>
         <header class="header">
-        <nav class="navbar">
-            <a href="index.html" class="headLogo__a"><img src="img/HBHprime.png" alt="HomeBase Health" height="90rem"></a>
-            <ul class="nav-menu">
-                <li class="nav__li">
-                    <a href="index.html" class="nav__a">Home</a>
-                </li>
-                <li class="nav__li">
-                    <a href="map.html" class="nav__a">Clinic Locator</a>
-                </li>
-                <li class="nav__li">
-                    <a href="form.html" class="nav__a">Form</a>
-                </li>
-                <li class="nav__li">
-                    <a href="#" class="nav__a">Resources</a>
-                </li>
-            </ul>
-            <div class="burger">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-            </div>
-        </nav>
+            <nav class="navbar">
+                <a href="index.html" class="headLogo__a"
+                    ><img
+                        src="img/HBHprime.png"
+                        alt="HomeBase Health"
+                        height="90rem"
+                /></a>
+                <ul class="nav-menu">
+                    <li class="nav__li">
+                        <a href="index.html" class="nav__a">Home</a>
+                    </li>
+                    <li class="nav__li">
+                        <a href="map.html" class="nav__a">Clinic Locator</a>
+                    </li>
+                    <li class="nav__li">
+                        <a href="form.html" class="nav__a">Form</a>
+                    </li>
+                    <li class="nav__li">
+                        <a href="#" class="nav__a">Resources</a>
+                    </li>
+                </ul>
+                <div class="burger">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </nav>
         </header>
         <h1>My Google Maps Demo</h1>
         <form id="map__searchForm">
@@ -67,7 +77,7 @@
 
         <form id="map__filter-form">
             <button id="map__close-filter-btn">
-                <i class="material-symbols-outlined"> close </i>
+                <i class="fa-solid fa-xmark"></i>
             </button>
 
             <div id="filter-modal__facility-type">
