@@ -310,6 +310,12 @@ window.addEventListener('DOMContentLoaded', () => {
     const icfCheckbox = document.getElementById('icf__checkbox');
     const saeligibleCheckbox = document.getElementById('saeligible__checkbox');
 
+    document
+        .getElementById('map__close-filter-btn')
+        .addEventListener('click', (e) => {
+            e.preventDefault();
+        });
+
     filterForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const userQuery =
@@ -338,6 +344,29 @@ window.addEventListener('DOMContentLoaded', () => {
     document
         .getElementById('org-markers__checkbox')
         .addEventListener('change', toggleOrgMarkers);
+
+    document.getElementById('map__filter-btn').addEventListener('click', () => {
+        filterForm.classList.add('show');
+        document.getElementById('map__filter-overlay').classList.add('show');
+    });
+
+    document
+        .getElementById('map__close-filter-btn')
+        .addEventListener('click', () => {
+            filterForm.classList.remove('show');
+            document
+                .getElementById('map__filter-overlay')
+                .classList.remove('show');
+        });
+
+    document
+        .getElementById('map__filter-submit')
+        .addEventListener('click', () => {
+            filterForm.classList.remove('show');
+            document
+                .getElementById('map__filter-overlay')
+                .classList.remove('show');
+        });
 });
 
 /*
