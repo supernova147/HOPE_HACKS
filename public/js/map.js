@@ -8,8 +8,10 @@ const NCbounds = {
     east: -75.46,
 };
 let markers = [];
+let orgMarkers = [];
 let userMarker;
 let openedInfoWindow;
+let orgMarkersVisible = true;
 // NOTE: markers[0] will always house the user marker as it is the first marker rendered
 
 const initMap = async () => {
@@ -27,25 +29,23 @@ const initMap = async () => {
     console.log('Maps JS API loaded');
     userMarker = await addUserMarker(defaultCoor);
     markers.push(await renderFacilities('Charlotte'));
+    orgMarkers.push(await renderOrgFacilities());
 };
 
 const addUserMarker = async (coor) => {
-    const { AdvancedMarkerElement, PinElement } =
-        await google.maps.importLibrary('marker');
+    const { AdvancedMarkerElement } = await google.maps.importLibrary('marker');
 
     const personImg = document.createElement('img');
     personImg.src = new URL('../img/person.png', import.meta.url).href;
     // IMG ATTRIBUTION: <a href="https://www.flaticon.com/free-icons/marker" title="marker icons">Marker icons created by juicy_fish - Flaticon</a>
 
-    const userPin = new PinElement({
-        glyph: personImg,
-    });
     // NOTICE! Change z-index to be on top of other markers
     const userMarker = new AdvancedMarkerElement({
         map,
         position: coor,
         content: personImg,
         title: 'Marker',
+        zIndex: 10,
     });
     // console.log('Rendered marker: ', userMarker.position);
     return userMarker;
@@ -62,7 +62,7 @@ const addFacilityMarker = async (coor) => {
         title: 'Marker',
     });
 
-    // console.log('Rendered marker: ', facilityMarker.position);
+    console.log('Rendered marker: ', facilityMarker.position);
     return facilityMarker;
 };
 
@@ -99,6 +99,45 @@ const addInfoBox = async (feature, marker) => {
     });
 };
 
+const addOrgMarker = async (coor) => {
+    const { AdvancedMarkerElement, PinElement } =
+        await google.maps.importLibrary('marker');
+
+    const orgPin = new PinElement({
+        background: '#1D8A99',
+        borderColor: '#0D3B66',
+        glyphColor: '#0D3B66',
+    });
+
+    const orgMarker = new AdvancedMarkerElement({
+        map,
+        position: coor,
+        title: 'Homebase Health Temporary Facility',
+        content: orgPin.element,
+        zIndex: 5,
+    });
+
+    // console.log('Rendered org facility marker: ', orgMarker.position);
+    return orgMarker;
+};
+
+const addOrgInfoBox = async (address, marker) => {
+    const { InfoWindow } = await google.maps.importLibrary('maps');
+
+    const contentString = `
+        <h1 class="info-window__name">Homebase Health Temporary Facility</h1>
+        <p>${address.address}</p>
+    `;
+
+    const infoWindow = new InfoWindow({ content: contentString });
+
+    marker.addEventListener('click', () => {
+        if (openedInfoWindow) openedInfoWindow.close();
+        infoWindow.open({ anchor: marker, map });
+        openedInfoWindow = infoWindow;
+    });
+};
+
 // DOCUMENTATION: https://developers.google.com/maps/documentation/javascript/reference/geocoder \\
 const geocode = async (address, userFilters = null) => {
     const { Geocoder } = await google.maps.importLibrary('geocoding');
@@ -108,9 +147,11 @@ const geocode = async (address, userFilters = null) => {
     const res = await new Promise((resolve, reject) => {
         geocoder.geocode({ address }, async (res, stat) => {
             if (stat === google.maps.GeocoderStatus.OK) resolve(res);
-            else reject(`Geocode failed: ${stat}`);
+            else reject(`Geocode user input failed: ${stat}`);
         });
     });
+
+    console.log(res[0]);
 
     const location = res[0];
     const coor = {
@@ -130,11 +171,55 @@ const geocode = async (address, userFilters = null) => {
     }
 
     await renderFacilities(city, userFilters);
+    await renderOrgFacilities();
+};
+
+const formAddressValidation = async () => {
+    const dbAddresses = await fetch('/orgFacilities');
+    if (!dbAddresses.ok)
+        throw new Error(`HTTP error! status: ${dbAddresses.status}`);
+    const addresses = await dbAddresses.json();
+
+    const { Geocoder } = await google.maps.importLibrary('geocoding');
+    const geocoder = new Geocoder();
+
+    const verifiedAddresses = [];
+
+    for (const record of addresses) {
+        const fullAddress = `${record.address}, ${record.city}, ${record.state} ${record.zipcode}`;
+
+        try {
+            const res = await new Promise((resolve, reject) => {
+                geocoder.geocode(
+                    { address: fullAddress },
+                    (results, status) => {
+                        if (status === google.maps.GeocoderStatus.OK)
+                            resolve(results);
+                        else
+                            reject(
+                                `Geocode failed for "${fullAddress}": ${status}`
+                            );
+                    }
+                );
+            });
+
+            const location = res[0];
+            verifiedAddresses.push({
+                address: location.formatted_address,
+                lat: location.geometry.location.lat(),
+                lng: location.geometry.location.lng(),
+            });
+        } catch (err) {
+            console.error('Failed validating address fetched from db:', err);
+        }
+    }
+    // console.log('Verified addresses:', verifiedAddresses);
+    return verifiedAddresses;
 };
 
 const renderFacilities = async (city, userFilters = null) => {
     try {
-        const fetchedFacilities = await fetch('/clinics', {
+        const fetchedFacilities = await fetch('/facilities', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -155,6 +240,24 @@ const renderFacilities = async (city, userFilters = null) => {
         }
     } catch (err) {
         console.error('Failed to get facilities:', err);
+    }
+};
+
+const renderOrgFacilities = async () => {
+    try {
+        const verifiedAddresses = await formAddressValidation();
+
+        orgMarkers.forEach((marker) => marker.setMap(null));
+        orgMarkers = [];
+
+        for (const org of verifiedAddresses) {
+            const coor = { lat: org.lat, lng: org.lng };
+            const marker = await addOrgMarker(coor);
+            await addOrgInfoBox(org, marker);
+            orgMarkers.push(marker);
+        }
+    } catch (err) {
+        console.error('Failed to render org facilities:', err);
     }
 };
 
@@ -188,6 +291,14 @@ const loadGoogleMaps = async () => {
     } catch (err) {
         console.log('Failed to load API key:', err);
     }
+};
+
+const toggleOrgMarkers = () => {
+    orgMarkersVisible = !orgMarkersVisible;
+
+    orgMarkers.forEach((marker) => {
+        marker.setMap(orgMarkersVisible ? map : null);
+    });
 };
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -224,7 +335,9 @@ window.addEventListener('DOMContentLoaded', () => {
         await geocode(userQuery);
     });
 
-    console.log(markers);
+    document
+        .getElementById('org-markers__checkbox')
+        .addEventListener('change', toggleOrgMarkers);
 });
 
 /*
