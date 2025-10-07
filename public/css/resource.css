@@ -243,12 +243,12 @@
  }
 
 .card__title { 
-  font-size: 1.5rem; 
+  font-size: 1rem; 
     color:#0D3B66; 
 }
 .card__text { 
     margin: 5px; 
-    font-size: 1.2rem; 
+    font-size: .97rem; 
     color:#0D3B66; 
     text-align: center;
 }
@@ -284,7 +284,7 @@
   text-align: center; 
 }
 #news__text{
-  font-size: 1.5rem; 
+  font-size: 1.2rem; 
   color:#0D3B66;
   text-align: center; 
 }
