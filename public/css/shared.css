@@ -13,14 +13,12 @@ body {
 }
 
 /* NavBar */
-li {
+
+.nav__li {
   list-style: none;
   display: inline;
   font-size: 1rem;
   row-gap: 2rem;
-}
-
-.nav__li {
   padding-left: 1rem;
   padding-right: 1rem;
 }
@@ -68,9 +66,10 @@ a {
   --muted:#d6e4ee;
 }
 
-body{
-  font-family: "Space Grotesk";
-}
+.site-overlay,
+.mobile-menu-backdrop { pointer-events: none; }
+.site-overlay.is-open, .mobile-menu-backdrop.is-open { pointer-events: auto; }
+
 
 /* ----- Footer shell ----- */
 .site-footer {
@@ -125,7 +124,7 @@ body{
   transition: transform .2s ease;
 }
 
-.fd-toggle[aria-expanded="true"] .fd-caret {
+.fd-toggle.open .fd-caret {
   transform: rotate(180deg);
 }
 
@@ -199,7 +198,7 @@ body{
   gap: .75rem;
   border-top: 1px solid rgba(255,255,255,.2);
   padding: 1rem;
-  background: var(--navy-700);
+  /* background: var(--navy-700); */
   box-sizing: border-box;
   width: 100%;
 }
