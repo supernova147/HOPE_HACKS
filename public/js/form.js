@@ -1,3 +1,5 @@
+// const { populate } = require("dotenv");
+
 // For Form Validation
 console.log('JS connected'); //test
 const fullname = document.getElementById('name');
@@ -21,6 +23,11 @@ let directionError = document.getElementById('directionError');
 
 const form = document.getElementById('contact');
 
+const popUp = document.getElementById('form-popup');
+const popUpItem = document.getElementById('form-popup--item');
+const close = document.getElementById('close');
+const para = document.getElementById('form-popup--p');
+
 // Regex to check for valid inputs.
 const emailRegex = /^[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+(?:\.[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+)*@(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+[A-Za-z]{2,}$/i;
 const phoneRegex = /^(?:\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4}))$/;
@@ -37,20 +44,39 @@ let locationValid = false;
 let directionValid = false;
 
 const userInput = {
-        fullnameInput: '',
-        phoneInput: '',
-        emailInput: '',
+    fullnameInput: '',
+    phoneInput: '',
+    emailInput: '',
 
-        addressInput: '',
-        stateInput: '',
-        cityInput: '',
-        zipInput: '',
+    addressInput: '',
+    stateInput: '',
+    cityInput: '',
+    zipInput: '',
 
-        directionInput: ''
+    directionInput: ''
 };
 
 const jsonString = JSON.stringify(userInput);
+openPop();
 // const document.getElementById('form-popup')
+function closePop() {
+    popUp.style.display = 'none';
+    popUpItem.style.display = 'none';
+    close.style.display = 'none';
+    popUp.style.position = 'relative';
+    popUp.style.opacity = 0;
+    para.style.display = 'none';
+    console.log('im being clicked');
+}
+function openPop() {
+    popUp.style.visibility = 'block';
+    popUpItem.style.display = 'block';
+    close.style.display = 'block';
+    popUp.style.opacity = 1;
+    popUp.style.position = 'fixed';
+    para.style.display = 'inline';
+
+}
 
 function validation() {
     // For each section of the form, regexs were used to check, as well as blank inputs; else the result will be true.
@@ -111,6 +137,7 @@ form.addEventListener('submit', async (event) => {
     }
     else {
         console.log('Successful form submission.');
+        openPop();
 
         userInput.fullnameInput = `${fullname.value}`;
         userInput.phoneInput = `${phone.value}`;
@@ -124,22 +151,19 @@ form.addEventListener('submit', async (event) => {
         userInput.directionInput = `${direction.value}`;
         // console.log(userInput);
         // Sending successful submission & its data to the backend server.
+
         try {
-        const res = await fetch('/api/data', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(userInput),
-        });
+    const res = await fetch('/api/data', {  
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userInput),
+    });
 
-        const ct = res.headers.get('content-type') || '';
-        let data = null, raw = null;
-
-        data = await res.json();
-    if (!res.ok) {
-        const msg = dataValid?.message || dataValid?.msg || raw || `HTTP ${res.status}`;
-        throw new Error(msg);
-    }
-
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.message || `Request failed: ${res.status}`);
+        }
+        const data = await res.json();
         console.log('Server accepted:', data);
 
         fullname.value = '';
@@ -160,3 +184,4 @@ form.addEventListener('submit', async (event) => {
 });
 
 // form-popup.addEventListener including logic for the form pop up.
+close.addEventListener('click',  closePop);

@@ -54,19 +54,30 @@ label {
     border-bottom: 0.33rem solid #0D3B66;
 }
 #form-popup {
-    position: fixed;
+    display: block;
+    align-items: center;
+    position: absolute;
     top: 50%;
-    right: 14%;
-    /* visibility: hidden; */
+    right: 12.5%;
+    left: 12.5%;
+    margin: 0 auto;
+    opacity: 0;
     background-color: #0D3B66;
     text-align: center;
     color: #ECF8FF;
-    margin: 0 auto;
-    display: block;
     box-shadow: #ECF8FF 0.1rem 0.1rem;
     border-radius: 0.2rem;
     padding: 2rem;
     border: 0.15rem #218380 solid;
+    z-index: 10;
+}
+
+#form-popup--item{
+    display: none;
+}
+
+#form-popup--p {
+    display: none;
 }
 
 #form-popup:hover {
@@ -76,6 +87,7 @@ label {
 }
 
 #close {
+    display: none;
     position: absolute;
     top: .5rem;
     right: .5rem;
@@ -84,7 +96,6 @@ label {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-
     border: none;
     background-color: transparent;
     color: #ECF8FF;
@@ -224,6 +235,12 @@ label {
 
 .form {
     width: 50%;
+}
+#form-popup {
+    display: block;
+    top: 50%;
+    right: 30%;
+    left: 30%;
 }
 
 }
