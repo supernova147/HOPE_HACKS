@@ -25,7 +25,7 @@ const form = document.getElementById('contact');
 const emailRegex = /^[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+(?:\.[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+)*@(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+[A-Za-z]{2,}$/i;
 const phoneRegex = /^(?:\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4}))$/;
 const nameRegex = /^[a-zA-Z\s'-]+$/;
-const addressRegex = /^(?=.*\d)[A-Za-z0-9 .,'\-#]{5,100}$/;
+const addressRegex = /^[A-Za-z0-9 .,'\-#]{5,100}$/;
 const commentRegex = /^(?=.*[\p{L}\p{N}])[\p{L}\p{N}\s'.,!?()"%-:;]{1,300}$/u;
 
 //Setting valid inputs as false by default.
@@ -124,19 +124,22 @@ form.addEventListener('submit', async (event) => {
         userInput.directionInput = `${direction.value}`;
         // console.log(userInput);
         // Sending successful submission & its data to the backend server.
-    try {
-    const res = await fetch('/api/data', {  
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(userInput),
-    });
+        try {
+        const res = await fetch('/api/data', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(userInput),
+        });
 
+        const ct = res.headers.get('content-type') || '';
+        let data = null, raw = null;
+
+        data = await res.json();
     if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.message || `Request failed: ${res.status}`);
+        const msg = dataValid?.message || dataValid?.msg || raw || `HTTP ${res.status}`;
+        throw new Error(msg);
     }
 
-        const data = await res.json();
         console.log('Server accepted:', data);
 
         fullname.value = '';
