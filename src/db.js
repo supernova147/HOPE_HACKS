@@ -11,9 +11,6 @@ const pool = mysql.createPool({ // Connection to DB - changed to pool
   user: process.env.DB_USER,
   database: process.env.DB_NAME, // Eddie filled this out ;)
   password: process.env.DB_PW,
-  ssl: { 
-    ca: fs.readFileSync(path.join(__dirname, 'ca.pem')),
-    rejectUnauthorized: true }  
 }).promise(); 
 
 module.exports = { pool };
