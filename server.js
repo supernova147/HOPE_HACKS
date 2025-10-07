@@ -1,9 +1,9 @@
 require('dotenv').config(); // Have to install dotenv in order to use variables inside .env file
 const express = require('express');
 const cors = require('cors');
-const fetchFacilities = require('./facilities.js');
+const fetchFacilities = require('./src/facilities.js');
 const path = require('path');
-const { pool } = require('./db');
+const { pool } = require('./src/db.js');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -19,6 +19,14 @@ app.get('', (req, res) => {
 
 app.get('/map', (req, res) => {
     res.sendFile(path.join(__dirname, '../public/map.html'));
+});
+
+app.get('/form', (req, res) => {
+    res.sendFile(path.join(__dirname, '../public/form.html'));
+});
+
+app.get('/resources', (req, res) => {
+    res.sendFile(path.join(__dirname, '../public/resources.html'));
 });
 
 app.get('/config', (req, res) => {
