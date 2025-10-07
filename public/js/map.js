@@ -159,16 +159,15 @@ const geocode = async (address, userFilters = null) => {
         lng: location.geometry.location.lng(),
     };
 
-    userMarker.position = coor;
+    if (coor) userMarker.position = coor;
     map.setCenter(coor);
 
-    const locationType = location.geometry.location_type;
     let city;
-    if (locationType === 'ROOFTOP') {
-        city = location.address_components[2].long_name;
-    } else if (locationType === 'APPROXIMATE') {
-        city = location.address_components[0].long_name;
-    }
+
+    location.address_components.forEach((e) => {
+        if (e.types[0] === 'locality') city = e.long_name;
+    });
+    console.log(city);
 
     await renderFacilities(city, userFilters);
     await renderOrgFacilities();
