@@ -1,110 +1,263 @@
-// DOCUMENTATION: https://developers.google.com/codelabs/maps-platform/maps-platform-101-js#0 \\
-// const { Loader } = require('@googlemaps/js-api-loader');
-
-// const apiOptions = {
-//     api: MAPS_API_KEY,
-// };
-
-// const loader = new Loader(apiOptions);
-// loader.then(() => {
-//     console.log('Maps JS API loaded');
-//     const map = initMap();
-//     const markers = addMarkers(map);
-// });
-
-// const initMap = () => {
-//     const mapOptions = {
-//         center: { lat: -33.860664, lng: 151.208138 }, // example coordinates
-//         zoom: 8,
-//     };
-//     const mapContainer = document.getElementById('map');
-//     const map = new google.maps.Map(mapContainer, mapOptions);
-//     return map;
-// };
-
-// const addMarkers = (map) => {
-//     const locations = {
-//         // example locations
-//         operaHouse: { lat: -33.8567844, lng: 151.213108 },
-//         tarongaZoo: { lat: -33.8472767, lng: 151.2188164 },
-//         manlyBeach: { lat: -33.8209738, lng: 151.2563253 },
-//         hyderPark: { lat: -33.8690081, lng: 151.2052393 },
-//         theRocks: { lat: -33.8587568, lng: 151.2058246 },
-//         circularQuay: { lat: -33.858761, lng: 151.2055688 },
-//         harbourBridge: { lat: -33.852228, lng: 151.2038374 },
-//         kingsCross: { lat: -33.8737375, lng: 151.222569 },
-//         botanicGardens: { lat: -33.864167, lng: 151.216387 },
-//         museumOfSydney: { lat: -33.8636005, lng: 151.2092542 },
-//         maritimeMuseum: { lat: -33.869395, lng: 151.198648 },
-//         kingStreetWharf: { lat: -33.8665445, lng: 151.1989808 },
-//         aquarium: { lat: -33.869627, lng: 151.202146 },
-//         darlingHarbour: { lat: -33.87488, lng: 151.1987113 },
-//         barangaroo: { lat: -33.8605523, lng: 151.1972205 },
-//     };
-//     const markers = [];
-//     for (const location in locations) {
-//         const markerOptions = {
-//             map: map,
-//             position: locations[location],
-//         };
-//         const marker = new google.maps.Marker(markerOptions);
-//         markers.push(marker);
-//     }
-//     return markers;
-// };
-
-// module.exports = loader;
-
 // DOCUMENTATION: https://developers.google.com/maps/documentation/javascript/load-maps-js-api#migrate-to-dynamic \\
 let map;
 const defaultCoor = { lat: 35.227085, lng: -80.843124 }; // default center coordinates: Charlotte, NC
-const markers = [];
+const NCbounds = {
+    north: 36.59,
+    south: 33.85,
+    west: -84.33,
+    east: -75.46,
+};
+let markers = [];
+let orgMarkers = [];
 let userMarker;
+let openedInfoWindow;
+let orgMarkersVisible = true;
 // NOTE: markers[0] will always house the user marker as it is the first marker rendered
 
 const initMap = async () => {
     const { Map } = await google.maps.importLibrary('maps');
     map = new Map(document.getElementById('map'), {
         center: defaultCoor,
-        zoom: 8,
+        zoom: 12,
+        restriction: {
+            latLngBounds: NCbounds,
+            strictBounds: true,
+        },
         mapId: 'a23b767cb32962acd3094bd2',
     });
 
     console.log('Maps JS API loaded');
-    userMarker = await addMarker(defaultCoor);
+    userMarker = await addUserMarker(defaultCoor);
+    markers.push(await renderFacilities('Charlotte'));
+    orgMarkers.push(await renderOrgFacilities());
 };
 
-const addMarker = async (coor) => {
+const addUserMarker = async (coor) => {
     const { AdvancedMarkerElement } = await google.maps.importLibrary('marker');
-    const marker = new AdvancedMarkerElement({
-        map: map,
+
+    const personImg = document.createElement('img');
+    personImg.src = new URL('../img/person.png', import.meta.url).href;
+    // IMG ATTRIBUTION: <a href="https://www.flaticon.com/free-icons/marker" title="marker icons">Marker icons created by juicy_fish - Flaticon</a>
+
+    // NOTICE! Change z-index to be on top of other markers
+    const userMarker = new AdvancedMarkerElement({
+        map,
         position: coor,
-        title: 'Charlotte',
+        content: personImg,
+        title: 'Marker',
+        zIndex: 10,
     });
-    console.log('Rendered marker: ', marker.position);
-    return marker;
+    // console.log('Rendered marker: ', userMarker.position);
+    return userMarker;
+};
+
+const addFacilityMarker = async (coor) => {
+    const { AdvancedMarkerElement } = await google.maps.importLibrary('marker');
+
+    const facilityMarker = new AdvancedMarkerElement({
+        map,
+        position: coor,
+        collisionBehavior:
+            google.maps.CollisionBehavior.OPTIONAL_AND_HIDES_LOWER_PRIORITY,
+        title: 'Marker',
+    });
+
+    console.log('Rendered marker: ', facilityMarker.position);
+    return facilityMarker;
+};
+
+const addInfoBox = async (feature, marker) => {
+    const { InfoWindow } = await google.maps.importLibrary('maps');
+    const attributes = feature.attributes;
+
+    const contentString = `<h1 class="info-window__name">${attributes.facility}</h1>
+    <p class="info-window__type">${attributes.stype}</p>
+    <div class="info-window__contact>
+        <p class="info-window__contact-phone">Phone Number: ${attributes.fphone}</p>
+    </div>
+    <div class="info-window__location>
+        <p class="info-window__location-address">${attributes.address}</p>
+        <p class="info-window__location-city-state-zip">${attributes.scity} ${attributes.sstate} ${attributes.szip}</p>
+    </div>
+    <div class="info-window__services">
+        <p class="info-window__services-icf">${attributes.icf[1]}</p>
+        <p class="info-window__services-saeligible">${attributes.saeligible[1]}</p>
+    </div>`;
+
+    const infoWindow = new InfoWindow({
+        content: contentString,
+        ariaLabel: marker.attributes.facility,
+    });
+
+    marker.addEventListener('click', () => {
+        if (openedInfoWindow) openedInfoWindow.close();
+        infoWindow.open({
+            anchor: marker,
+            map,
+        });
+        openedInfoWindow = infoWindow;
+    });
+};
+
+const addOrgMarker = async (coor) => {
+    const { AdvancedMarkerElement, PinElement } =
+        await google.maps.importLibrary('marker');
+
+    const orgPin = new PinElement({
+        background: '#1D8A99',
+        borderColor: '#0D3B66',
+        glyphColor: '#0D3B66',
+    });
+
+    const orgMarker = new AdvancedMarkerElement({
+        map,
+        position: coor,
+        title: 'Homebase Health Temporary Facility',
+        content: orgPin.element,
+        zIndex: 5,
+    });
+
+    // console.log('Rendered org facility marker: ', orgMarker.position);
+    return orgMarker;
+};
+
+const addOrgInfoBox = async (address, marker) => {
+    const { InfoWindow } = await google.maps.importLibrary('maps');
+
+    const contentString = `
+        <h1 class="info-window__name">Homebase Health Temporary Facility</h1>
+        <p>${address.address}</p>
+    `;
+
+    const infoWindow = new InfoWindow({ content: contentString });
+
+    marker.addEventListener('click', () => {
+        if (openedInfoWindow) openedInfoWindow.close();
+        infoWindow.open({ anchor: marker, map });
+        openedInfoWindow = infoWindow;
+    });
 };
 
 // DOCUMENTATION: https://developers.google.com/maps/documentation/javascript/reference/geocoder \\
-const geocode = async (address) => {
+const geocode = async (address, userFilters = null) => {
     const { Geocoder } = await google.maps.importLibrary('geocoding');
     const geocoder = new Geocoder();
-    geocoder.geocode({ address: address }, (res, stat) => {
-        if (stat === google.maps.GeocoderStatus.OK) {
-            const coor = {
-                lat: res[0].geometry.location.lat(),
-                lng: res[0].geometry.location.lng(),
-            };
-            // prettier-ignore
-            console.log(`New coordinates: ${coor}`);
-            userMarker.position = coor;
-            map.setCenter(coor);
-        } else {
-            console.error(
-                `Geocode was not successful for the following reason: ${stat}`
-            );
-        }
+
+    // ISSUE: The API expects a callback, so have to make it promise-based
+    const res = await new Promise((resolve, reject) => {
+        geocoder.geocode({ address }, async (res, stat) => {
+            if (stat === google.maps.GeocoderStatus.OK) resolve(res);
+            else reject(`Geocode user input failed: ${stat}`);
+        });
     });
+
+    console.log(res[0]);
+
+    const location = res[0];
+    const coor = {
+        lat: location.geometry.location.lat(),
+        lng: location.geometry.location.lng(),
+    };
+
+    if (coor) userMarker.position = coor;
+    map.setCenter(coor);
+
+    let city;
+
+    location.address_components.forEach((e) => {
+        if (e.types[0] === 'locality') city = e.long_name;
+    });
+    console.log(city);
+
+    await renderFacilities(city, userFilters);
+    await renderOrgFacilities();
+};
+
+const formAddressValidation = async () => {
+    const dbAddresses = await fetch('/orgFacilities');
+    if (!dbAddresses.ok)
+        throw new Error(`HTTP error! status: ${dbAddresses.status}`);
+    const addresses = await dbAddresses.json();
+
+    const { Geocoder } = await google.maps.importLibrary('geocoding');
+    const geocoder = new Geocoder();
+
+    const verifiedAddresses = [];
+
+    for (const record of addresses) {
+        const fullAddress = `${record.address}, ${record.city}, ${record.state} ${record.zipcode}`;
+
+        try {
+            const res = await new Promise((resolve, reject) => {
+                geocoder.geocode(
+                    { address: fullAddress },
+                    (results, status) => {
+                        if (status === google.maps.GeocoderStatus.OK)
+                            resolve(results);
+                        else
+                            reject(
+                                `Geocode failed for "${fullAddress}": ${status}`
+                            );
+                    }
+                );
+            });
+
+            const location = res[0];
+            verifiedAddresses.push({
+                address: location.formatted_address,
+                lat: location.geometry.location.lat(),
+                lng: location.geometry.location.lng(),
+            });
+        } catch (err) {
+            console.error('Failed validating address fetched from db:', err);
+        }
+    }
+    // console.log('Verified addresses:', verifiedAddresses);
+    return verifiedAddresses;
+};
+
+const renderFacilities = async (city, userFilters = null) => {
+    try {
+        const fetchedFacilities = await fetch('/facilities', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ city, userFilters }),
+        });
+        const facilities = await fetchedFacilities.json();
+
+        markers.forEach((marker) => marker.setMap(null));
+        markers = [];
+
+        // Add markers for the filtered facilities
+        for (const facility of facilities) {
+            const { x: lng, y: lat } = facility.geometry;
+            const marker = await addFacilityMarker({ lat, lng });
+            await addInfoBox(facility, marker);
+            markers.push(marker);
+        }
+    } catch (err) {
+        console.error('Failed to get facilities:', err);
+    }
+};
+
+const renderOrgFacilities = async () => {
+    try {
+        const verifiedAddresses = await formAddressValidation();
+
+        orgMarkers.forEach((marker) => marker.setMap(null));
+        orgMarkers = [];
+
+        for (const org of verifiedAddresses) {
+            const coor = { lat: org.lat, lng: org.lng };
+            const marker = await addOrgMarker(coor);
+            await addOrgInfoBox(org, marker);
+            orgMarkers.push(marker);
+        }
+    } catch (err) {
+        console.error('Failed to render org facilities:', err);
+    }
 };
 
 const loadAPI = (apiKey) => {
@@ -124,7 +277,6 @@ const loadAPI = (apiKey) => {
 };
 
 const loadGoogleMaps = async () => {
-    console.log('loadGoogleMaps() called');
     try {
         const res = await fetch('/config'); // fetching the API key served by Express in the /config route
         console.log('fetch /config response:', res.status);
@@ -140,17 +292,80 @@ const loadGoogleMaps = async () => {
     }
 };
 
+const toggleOrgMarkers = () => {
+    orgMarkersVisible = !orgMarkersVisible;
+
+    orgMarkers.forEach((marker) => {
+        marker.setMap(orgMarkersVisible ? map : null);
+    });
+};
+
 window.addEventListener('DOMContentLoaded', () => {
-    console.log('DOMContentLoaded fired, starting loader...');
     loadGoogleMaps();
 
+    // Filtering Functionality
+    const filterForm = document.getElementById('map__filter-form');
+    const facilityTypeSelect = document.getElementById('facility-type__select');
+    const icfCheckbox = document.getElementById('icf__checkbox');
+    const saeligibleCheckbox = document.getElementById('saeligible__checkbox');
+
+    document
+        .getElementById('map__close-filter-btn')
+        .addEventListener('click', (e) => {
+            e.preventDefault();
+        });
+
+    filterForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const userQuery =
+            document.getElementById('map__inputBar').value || 'Charlotte';
+
+        const userFilters = {
+            stype: facilityTypeSelect.value || undefined,
+            icf: icfCheckbox.checked ? 'T' : undefined,
+            saeligible: saeligibleCheckbox.checked ? 'T' : undefined,
+        };
+
+        console.log(userFilters);
+
+        await geocode(userQuery, userFilters); // Passing the address to geocode() and deciding whether to pass the filters or null, which makes filters optional and avoids sending an empty object to the backend
+    });
+
+    // Search Bar Functionality
     const searchForm = document.getElementById('map__searchForm');
     searchForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const userQuery = document.getElementById('map__inputBar').value;
-        const coor = await geocode(userQuery);
-        await addMarker(coor);
+        const userQuery =
+            document.getElementById('map__inputBar').value || 'Charlotte';
+        await geocode(userQuery);
     });
+
+    document
+        .getElementById('org-markers__checkbox')
+        .addEventListener('change', toggleOrgMarkers);
+
+    document.getElementById('map__filter-btn').addEventListener('click', () => {
+        filterForm.classList.add('show');
+        document.getElementById('map__filter-overlay').classList.add('show');
+    });
+
+    document
+        .getElementById('map__close-filter-btn')
+        .addEventListener('click', () => {
+            filterForm.classList.remove('show');
+            document
+                .getElementById('map__filter-overlay')
+                .classList.remove('show');
+        });
+
+    document
+        .getElementById('map__filter-submit')
+        .addEventListener('click', () => {
+            filterForm.classList.remove('show');
+            document
+                .getElementById('map__filter-overlay')
+                .classList.remove('show');
+        });
 });
 
 /*

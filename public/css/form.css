@@ -54,14 +54,14 @@ label {
     border-bottom: 0.33rem solid #0D3B66;
 }
 #form-popup {
-    display: block;
+    display: none;
     align-items: center;
     position: absolute;
     top: 50%;
     right: 12.5%;
     left: 12.5%;
     margin: 0 auto;
-    opacity: 0;
+    opacity: 1;
     background-color: #0D3B66;
     text-align: center;
     color: #ECF8FF;
@@ -237,7 +237,7 @@ label {
     width: 50%;
 }
 #form-popup {
-    display: block;
+    display: none;
     top: 50%;
     right: 30%;
     left: 30%;

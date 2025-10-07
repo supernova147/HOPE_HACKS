@@ -1,5 +1,3 @@
-// const { populate } = require("dotenv");
-
 // For Form Validation
 console.log('JS connected'); //test
 const fullname = document.getElementById('name');

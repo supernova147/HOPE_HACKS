@@ -1,28 +1,24 @@
 require('dotenv').config(); // Have to install dotenv in order to use variables inside .env file
 const express = require('express');
 const cors = require('cors');
-// const {getClinics} = require('js/clinic.js');
+const fetchFacilities = require('./facilities.js');
 const path = require('path');
-// const mysql = require("mysql2");
+const { pool } = require('./db');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-
-const { pool } = require('./db');  
 
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../public')));
 
-/* Routes Below */
-
-app.get('', (req, res) => { 
+app.get('', (req, res) => {
     console.log('Server connected to the port');
     res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 
 app.get('/map', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/pages/testingmap.html'));
+    res.sendFile(path.join(__dirname, '../public/map.html'));
 });
 
 app.get('/config', (req, res) => {
@@ -31,74 +27,130 @@ app.get('/config', (req, res) => {
     res.json({ MAPS_API_KEY: process.env.MAPS_API_KEY });
 });
 
-app.post('/api/data', async (req, res) => { // Handler for sending data to the DB 
-        
-    const { //Form information from frontend
-            fullnameInput, 
-            phoneInput, 
-            emailInput, 
-            addressInput, 
-            stateInput, 
-            cityInput, 
-            zipInput, 
-            directionInput 
-            } = req.body; 
+app.post('/api/data', async (req, res) => {
+    // Handler for sending data to the DB
+    const {
+        //Form information from frontend
+        fullnameInput,
+        phoneInput,
+        emailInput,
+        addressInput,
+        stateInput,
+        cityInput,
+        zipInput,
+        directionInput,
+    } = req.body;
 
-        let conn;
+    let conn;
     try {
-    conn = await pool.getConnection();
-    await conn.beginTransaction(); 
-// ^ If for any reason, anything is invalid beginTransac helps to prevent data from entering the DB.
+        conn = await pool.getConnection();
+        await conn.beginTransaction();
+        // ^ If for any reason, anything is invalid beginTransac helps to prevent data from entering the DB.
 
-    const [personResult] = await conn.execute( //inserting person info
-        `INSERT INTO personInfo (fullName, phoneNum, email)
-        VALUES (?, ?, ?)`, // ? acts as another defenese against SQL injections; also values are assigned in order.
-        // Values will be 'translated' to a string value, preventing SQL injection;
-        [fullnameInput, phoneInput || null, emailInput]
-    );
-    const submissionID = personResult.insertId;//foreign key so both tables can be linked
+        const [personResult] = await conn.execute(
+            //inserting person info
+            `INSERT INTO personInfo (fullName, phoneNum, email)
+          VALUES (?, ?, ?)`, // ? acts as another defenese against SQL injections; also values are assigned in order.
+            // Values will be 'translated' to a string value, preventing SQL injection;
+            [fullnameInput, phoneInput || null, emailInput]
+        );
+        const submissionID = personResult.insertId; //foreign key so both tables can be linked
 
-    await conn.execute( //inserting location info
-        `INSERT INTO locationInfo (submissionID, address, city, state, zipcode, directions)
-        VALUES (?, ?, ?, ?, ?, ?)`,
-        [
-        submissionID, 
-        addressInput || null,
-        cityInput || null,
-        (stateInput || '').toUpperCase() || null, //
-        zipInput || null,
-        directionInput || null,
-        ]
-    );
-    await conn.commit();
-    return res.status(201).json({ ok: true, submissionID });
+        await conn.execute(
+            //inserting location info
+            `INSERT INTO locationInfo (submissionID, address, city, state, zipcode, directions)
+          VALUES (?, ?, ?, ?, ?, ?)`,
+            [
+                submissionID,
+                addressInput || null,
+                cityInput || null,
+                (stateInput || '').toUpperCase() || null, //
+                zipInput || null,
+                directionInput || null,
+            ]
+        );
+
+        await conn.commit();
+        return res.status(201).json({ ok: true, submissionID });
     } catch (err) {
-    try { await conn.rollback(); } catch {}
-    console.error('SERVER ERROR: ', {
-        code: err.code, message: err.message, sqlMessage: err.sqlMessage, sql: err.sql, stack: err.stack
-    });
-    return res.status(500).json({ error: 'server', code: err.code, msg: err.sqlMessage || err.message });
+        try {
+            await conn.rollback();
+        } catch {}
+        console.error('SERVER ERROR: ', {
+            code: err.code,
+            message: err.message,
+            sqlMessage: err.sqlMessage,
+            sql: err.sql,
+            stack: err.stack,
+        });
+        return res.status(500).json({
+            error: 'server',
+            code: err.code,
+            msg: err.sqlMessage || err.message,
+        });
     }
 });
 
-app.get('/health', (_req, res) => res.json({ok:true}));
+app.post('/facilities', async (req, res) => {
+    try {
+        const { city, userFilters } = req.body;
+        if (!city) {
+            return res.json({ error: 'City is required' });
+        }
 
-// app.get('/api/clinics', async(req,res)=> {
-//     try{
-//         const nameLike = req.query.name || undefined;
-//         const county = req.query.county || undefined;
-//         const services = req.query.services ? req.query.services.split(,).map(s => s.trim()).filter(Boolean) : [];
-//         const matchMode = req.query.match === 'all' ? 'all' : 'any';
-//         const limit = parseInt(req.query.limit, 10) || 200;
-//         const offset = parseInt(req.query.offset, 10) || 0;
+        const facilities = await fetchFacilities(city);
+        if (!facilities) {
+            return res.json({ error: 'Failed to fetch facilities' });
+        }
 
-//         const data = await getClinics({nameLike, county, services, matchMode, limit, offset});
-//         res.json(data);
-//     } catch (err){
-//         res.status(500).json ({error: err.message});
-//     }
-// });
+        let filteredFacilities = facilities;
+        if (userFilters) {
+            filteredFacilities = facilities.filter((facility) => {
+                const attributes = facility.attributes;
+                return (
+                    (!userFilters.stype ||
+                        attributes.stype === userFilters.stype) &&
+                    (!userFilters.icf || attributes.icf === userFilters.icf) &&
+                    (!userFilters.saeligible ||
+                        attributes.saeligible === userFilters.saeligible)
+                );
+            });
+        }
+
+        res.json(filteredFacilities);
+    } catch (err) {
+        res.json({
+            error: 'Error fetching or filtering facilities in /facilities',
+        });
+    }
+});
+
+app.get('/orgfacilities{/:city}', async (req, res) => {
+    try {
+        // const { city } = req.body;
+        // console.log(city);
+        // if (!city) {
+        //     return res.json({ error: 'City is required' });
+        // }
+        let city;
+        !req.params.city ? (city = 'charlotte') : (city = req.params.city);
+
+        const [rows] = await pool.query(
+            `SELECT * FROM locationInfo
+            WHERE LOWER(city) = LOWER(?)`,
+            [city]
+        );
+
+        console.log('Query results:', rows);
+        res.json(rows);
+    } catch (err) {
+        res.json({
+            error: 'Error fetching or filtering database in /orgFacilities',
+        });
+    }
+});
 
 app.listen(PORT, () => {
-    console.log(`Server running at ${PORT}`);
+    // console.log(`Server running at ${PORT}`);
+    console.log(`Server is running on http://localhost:${PORT}`);
 });
