@@ -55,8 +55,7 @@ const userInput = {
 };
 
 const jsonString = JSON.stringify(userInput);
-openPop();
-// const document.getElementById('form-popup')
+// openPop();
 function closePop() {
     popUp.style.display = 'none';
     popUpItem.style.display = 'none';
@@ -67,13 +66,12 @@ function closePop() {
     console.log('im being clicked');
 }
 function openPop() {
-    popUp.style.visibility = 'block';
+    popUp.style.display = 'block';
     popUpItem.style.display = 'block';
     close.style.display = 'block';
-    popUp.style.opacity = 1;
     popUp.style.position = 'fixed';
+    popUp.style.opacity = 1;
     para.style.display = 'inline';
-
 }
 
 function validation() {
@@ -104,7 +102,7 @@ function validation() {
         nameValid = true;
     }
         // JSON check the states & cities. double check locations basically & validate only numbers & strings for directions (TO DO LATER.) -  in addition, fix address regex.
-    if (!addressRegex.test(address.value.trim()) || address.value == '' || state.value == '' || state.value.length < 2 || city.value == '' || zip.value == '' || zip.value.length < 5) {
+    if (!addressRegex.test(address.value.trim()) || address.value == '' || state.value == '' || city.value == '' || zip.value == '' || zip.value.length < 5) {
         locationError.innerHTML = 'Please enter a valid location.';
         locationValid = false;
     }
