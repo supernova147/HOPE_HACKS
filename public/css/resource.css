@@ -112,19 +112,6 @@
 
 .hb-dot.is-active { background:#1D8A99; }
 
-/* Pause/Play */
-/* #hb-toggle { 
-  cursor:pointer;
-  border:0; 
-  background:transparent; 
-  color:#fff; 
-  font-size: 30px; 
-   z-index:20; 
-  width:auto; 
-  height:auto; 
-  touch-action:manipulation; 
-} */
-
 /* Prev/Next */
 .hb-prev, .hb-next { 
   position:absolute;
@@ -224,12 +211,13 @@
   gap:.75rem;
   padding:.75rem; 
   box-shadow: 0 4px 6px rgba(16,24,40,0.5);
-  height: 100%
+  height: 100%;
 }
 
 #card__media{
   width:100%; 
-  height: 10.5rem; 
+  display: flex;
+  height: 16rem; 
   border-radius:.5rem; 
   background:#e6eaef;
 }
@@ -256,8 +244,8 @@
 /* NEWS block */
 
 #news .cards {
- grid-template-columns: 1fr;  /* stays single-column */
-  max-width: 75%;  
+  grid-template-columns: 1fr;
+  max-width: 100%;  
   margin: auto;            
   padding: 2rem 1rem;  
 }
@@ -315,7 +303,13 @@
 }
   #services .cards{
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(350px, 2fr));
+    gap: 1rem;
+  }
+
+   #news .cards{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
   }
 
@@ -326,7 +320,6 @@
 }
 @media(max-width: 1024px){
     .cards{
-        grid-template-columns: repeat(2, 1fr);
         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     }
 }
