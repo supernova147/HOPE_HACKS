@@ -37,6 +37,7 @@ const addUserMarker = async (coor) => {
 
     const personImg = document.createElement('img');
     personImg.src = new URL('../img/person.png', import.meta.url).href;
+    personImg.alt = 'User Marker';
     // IMG ATTRIBUTION: <a href="https://www.flaticon.com/free-icons/marker" title="marker icons">Marker icons created by juicy_fish - Flaticon</a>
 
     // NOTICE! Change z-index to be on top of other markers
@@ -70,18 +71,25 @@ const addInfoBox = async (feature, marker) => {
     const { InfoWindow } = await google.maps.importLibrary('maps');
     const attributes = feature.attributes;
 
-    const contentString = `<h1 class="info-window__name">${attributes.facility}</h1>
-    <p class="info-window__type">${attributes.stype}</p>
-    <div class="info-window__contact>
-        <p class="info-window__contact-phone">Phone Number: ${attributes.fphone}</p>
-    </div>
-    <div class="info-window__location>
-        <p class="info-window__location-address">${attributes.address}</p>
-        <p class="info-window__location-city-state-zip">${attributes.scity} ${attributes.sstate} ${attributes.szip}</p>
-    </div>
-    <div class="info-window__services">
-        <p class="info-window__services-icf">${attributes.icf[1]}</p>
-        <p class="info-window__services-saeligible">${attributes.saeligible[1]}</p>
+    const contentString = `
+    <div class="info-window">
+        <h1 class="info-window__name">${attributes.facility}</h1>
+        <p class="info-window__type">${attributes.stype}</p>
+        <div class="info-window__info-section">
+            <div class="info-window__contact">
+                <i class="fa-solid fa-phone"></i>
+                <p class="info-window__contact-phone">${attributes.fphone}</p>
+            </div>
+            <div class="info-window__location">
+                <i class="fa-solid fa-location-dot"></i>
+                <p class="info-window__location-address">${attributes.address}</p>
+                <p class="info-window__location-city-state-zip">${attributes.scity} ${attributes.sstate} ${attributes.szip}</p>
+            </div>
+            <div class="info-window__services">
+                <p class="info-window__services-icf">${attributes.icf[1]}</p>
+                <p class="info-window__services-saeligible">${attributes.saeligible[1]}</p>
+            </div>
+        </div>
     </div>`;
 
     const infoWindow = new InfoWindow({
@@ -174,7 +182,7 @@ const geocode = async (address, userFilters = null) => {
 };
 
 const formAddressValidation = async () => {
-    const dbAddresses = await fetch('/orgFacilities');
+    const dbAddresses = await fetch('/orgfacilities');
     if (!dbAddresses.ok)
         throw new Error(`HTTP error! status: ${dbAddresses.status}`);
     const addresses = await dbAddresses.json();
@@ -226,6 +234,7 @@ const renderFacilities = async (city, userFilters = null) => {
             body: JSON.stringify({ city, userFilters }),
         });
         const facilities = await fetchedFacilities.json();
+        console.log(facilities);
 
         markers.forEach((marker) => marker.setMap(null));
         markers = [];

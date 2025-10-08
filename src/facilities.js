@@ -45,6 +45,8 @@ const standardizeJSON = (data) => {
 
         if (attributes.address === ' ')
             attributes.address = 'No address listed';
+
+        if (attributes.szip === 0) attributes.szip = '';
     });
 
     return data;

@@ -46,7 +46,8 @@
                 </div>
             </nav>
         </header>
-        <div id="map-css">
+
+        <main id="map-css">
             <div id="map__filter-overlay"></div>
             <section class="input__section">
                 <h1 id="mapHead__section">Locate Clinics Around NC</h1>
@@ -57,7 +58,7 @@
                         class="inputBox__input"
                         id="map__inputBar"
                     />
-                    <button id="map__searchBtn">
+                    <button id="map__searchBtn" aria-label="Search">
                         <i
                             class="fas fa-search"
                             style="color: #0d3b66; font-size: 1rem"
@@ -75,7 +76,7 @@
                     />
                     <label
                         class="filter-modal__label"
-                        for="org-markers__toggle"
+                        for="org-markers__checkbox"
                     >
                         Show Temporary Facilities
                     </label>
@@ -91,13 +92,16 @@
                 <form id="map__filter-form">
                     <div id="filter-modal__header">
                         <p>Filter Facilities</p>
-                        <button id="map__close-filter-btn">
+                        <button id="map__close-filter-btn" aria-label="Close">
                             <i class="fa-solid fa-xmark"></i>
                         </button>
                     </div>
 
                     <div id="filter-modal__facility-type">
-                        <label class="filter-modal__label" for="facility-type">
+                        <label
+                            class="filter-modal__label"
+                            for="facility-type__select"
+                        >
                             Facility Type
                         </label>
                         <select id="facility-type__select" name="facility-type">
@@ -132,7 +136,7 @@
 
                     <div id="filter-modal__icf">
                         <input type="checkbox" id="icf__checkbox" name="icf" />
-                        <label class="filter-modal__label" for="icf"
+                        <label class="filter-modal__label" for="icf__checkbox"
                             >Intermediate Care Facility</label
                         >
                     </div>
@@ -143,7 +147,9 @@
                             id="saeligible__checkbox"
                             name="saeligible"
                         />
-                        <label class="filter-modal__label" for="saeligible"
+                        <label
+                            class="filter-modal__label"
+                            for="saeligible__checkbox"
                             >Special Assistance Eligible (Adult Care)</label
                         >
                     </div>
@@ -153,7 +159,7 @@
                     </button>
                 </form>
             </section>
-        </div>
+        </main>
 
         <footer class="site-footer" aria-labelledby="footer-heading">
             <!-- Main footer content -->
