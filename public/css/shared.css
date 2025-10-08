@@ -10,6 +10,7 @@ html {
 
 body {
     background-color: #ecf8ff;
+    overflow-x: hidden;
 }
 
 h1,
@@ -254,7 +255,7 @@ a {
     }
 
     .nav-menu {
-        position: absolute;
+        position: fixed; /* fix anchoring to the viewport */
         top: 6.25rem;
         right: 0;
         flex-direction: column;
@@ -263,19 +264,26 @@ a {
         border-bottom-left-radius: 1rem;
         border-bottom-right-radius: 1rem;
         text-align: center;
-        transition: transform 0.3s ease-in-out;
         box-shadow: 0 10px 27px rgba(0, 0, 0, 0.05);
-        transform: translateX(100%);
+        transform: translateX(100vw);
+        opacity: 0;
+        visibility: hidden;
+        transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out, visibility 0s linear 0.3s;
         z-index: 1;
     }
 
     .nav-menu.active {
         transform: translateX(0);
+        opacity: 1;
+        visibility: visible;
+        transition-delay: 0s;
+        transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
         z-index: 3;
     }
 
     .nav__li {
         margin: 2.5rem 0;
+        display: block;
     }
 
     .nav__li a:hover {
