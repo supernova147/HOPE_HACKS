@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Homepage</title>
+  <link rel="stylesheet" href="css/shared.css">
+  <link rel="stylesheet" href="css/resource.css">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/x-icon" href="img/HBHTab.png">
+  <script src="js/resourceFinal.js"></script>
+</head>
+<body>
+  <header class="header">
+    <nav class="navbar">
+      <a href="index.html" class="headLogo__a">
+        <img src="img/HBHprime.png" alt="HomeBase Health" id="hbhLogoHead__nav">
+      </a>
+      <ul class="nav-menu">
+        <li class="nav__li"><a href="index.html" class="nav__a">Home</a></li>
+        <li class="nav__li"><a href="map.html" class="nav__a">Clinic Locator</a></li>
+        <li class="nav__li"><a href="form.html" class="nav__a">Form</a></li>
+        <li class="nav__li"><a href="resources.html" class="nav__a">Resources</a></li>
+      </ul>
+      <div class="burger">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </div>
+    </nav>
+  </header>
+
+
+
+<main>
+    <!-- Resources: Hero / CTA carousel -->
+<section class="hb-carousel" id="resourcesCarousel" aria-label="Featured resources">
+
+  <!-- Slides with captions -->
+  <div class="hb-slide fade is-active">
+    <div class="hb-media">
+      <img src="img/wellness.png" alt="Women & Children in wellness program">
+      <div class="hb-caption">
+        <h3>Homebase Wellness Programs</h3>
+        <p>Discover free and low-cost mental health and wellness initiatives in your area.</p>
+      </div>
+    </div>
+  </div>
+
+      <!-- slide 2 -->
+    <div class="hb-slide fade">
+    <div class="hb-media">
+      <img src="img/outreach.png" alt="Resource highlight 2">
+      <div class="hb-caption">
+        <h3>Homebase Support</h3>
+        <p>Explore local housing assistance programs designed to help families and individuals in need.</p>
+      </div>
+    </div>
+  </div>
+
+      <!-- slide 3 -->
+      <div class="hb-slide fade">
+    <div class="hb-media">
+      <img src="img/clinic.png" alt="Resource highlight 3">
+      <div class="hb-caption">
+        <h3>Clinic Locator</h3>
+        <p>Find local clinics offering affordable or free healthcare services</p>
+      </div>
+    </div>
+  </div>
+    <!-- controls -->
+    <div class="hb-overlay hb-overlay--shared">
+        <div class="hb-left">
+          <a class="hb-cta" href="form.html">Contact Us.</a>
+          <div class="hb-dots" role="tablist" aria-label="Slide navigation">
+            <button type="button" class="hb-dot is-active" aria-label="Go to slide 1"></button>
+            <button type="button" class="hb-dot" aria-label="Go to slide 2"></button>
+            <button type="button" class="hb-dot" aria-label="Go to slide 3"></button>
+          </div>
+        </div>
+        <!-- <button type="button" id="hb-toggle" aria-pressed="true" aria-label="Pause autoplay">⏸</button> -->
+      </div>
+
+  <button type="button" class="hb-prev" aria-label="Previous slide">❮</button>
+  <button type="button" class="hb-next" aria-label="Next slide">❯</button>
+  <!-- Edge click areas to guarantee clicks on mobile/overlays -->
+  <!-- <button type="button" class="hb-edge hb-edge--left" aria-label="Previous slide (edge)"></button>
+  <button type="button" class="hb-edge hb-edge--right" aria-label="Next slide (edge)"></button> -->
+</section>
+
+<!-- News Section -->
+ <section class="section" id="news">
+    <h2 class="section__title">News</h2>
+    
+    <ul class="cards"> 
+        <li class="card"> 
+            <div>
+                <img id="news__media" src="img/td2.png" alt="Thanksgiving Food Drive">
+            </div>
+            <div class="card__body"> 
+                <h3 id="news__title" class="card__title">Thanksgiving Food Drive!</h3> 
+                <p id="news__text" class="card__text" > The season of gratitude is a time to give back and gather together. Our annual Thanksgiving Food Drive helps ensure that everyone, can enjoy a nourishing meal and a sense of belonging during the holidays. Join Homebase Health by donating canned goods, volunteeing your time, or simply spreading the word. Every act of kindness helps fill a table and a heart.
+                </p>
+                
+                <a id="btn__news" class="btn btn--small" href="#">Learn More</a>
+            </div>
+        </li>
+    </ul> 
+</section>
+    <!-- Services Section -->
+    <section class="section" id="services">
+        <h2 class="section__title"> Services </h2>
+            <ul class="cards">
+                <!--resources card-->
+
+                <!-- medical volunteers -->
+                <li class="card">
+                    <div>
+                        <img id="card__media" src="img/volunteer2.png" alt="Medical Assistant w/ patient">
+                    </div>
+                    <div class="card__body">
+                        <h3 class="card__title">Medical Volunteers</h3>
+                            <p class="card__text"> We are always looking for medical volunteers here at Homebase Health. We provide transitional care, ensuring that our visitors have a healthier future. Volunteer physicians, NPs, PAs, RNs, MAs, and CNAs are always needed. Valid North Carolina medical licence is required. </p>
+                           <a class="btn btn--small" href="#">Learn More</a>
+                    </div>
+                </li>
+                
+                <!-- homebase care packages -->
+                 <li class="card">
+                    <div>
+                        <img id="card__media" src="img/care-package.png" alt="care package">
+                    </div>
+                    <div class="card__body">
+                        <h3 class="card__title">Homebase Care Packages</h3>
+                            <p class="card__text"> At Homebase Health, you can help make homebase care packages to assist our friends in need. These care packages for the homeless are a practical way to make a difference formour friends in need. Refer to our item to list to create a Homebase package.</p>
+                            <a class="btn btn--small" href="#">Learn More</a>
+                    </div>
+                </li>
+
+                <!-- medicare/medicaid -->
+                <li class="card">
+                    <div>
+                        <img id="card__media" src="img/medicare.png" alt="patients in wheelchairs">
+                    </div>
+                    <div class="card__body">
+                        <h3 class="card__title">Medicare with Homebase Health</h3>
+                            <p class="card__text"> Here at Homebase Health, we have partnered with different health care providers to accomodate for those in need of medical assitance.</p>
+                            <p class="card__text">Click here to find out more about our insurance providers, and apply for affordable care today.</p>
+                            <a class="btn btn--small" href="#">Learn More</a>
+                    </div>
+                </li>
+                <!-- emergency care -->
+                 <li class="card">
+                    <div>
+                        <img id="card__media" src="img/emergency.png" alt="">
+                    </div>
+                    <div class="card__body">
+                        <h3 class="card__title">Emergency Care</h3>
+                            <p class="card__text"> No one should face an emergency alone. Our goal is to connect our homesless neighbors with safe, immediate care. 
+                            <p class="card__text">Find nearby clinics and urgent care centers that can provide the care and compassion you deserve.</p>
+                            <a class="btn btn--small" href="#">Learn More</a>
+                    </div>
+                </li>
+
+                <!-- shelters -->
+                <li class="card">
+                    <div>
+                        <img id="card__media" src="img/shelter.png" alt="">
+                    </div>
+                    <div class="card__body">
+                        <h3 class="card__title"> Local Homeless Shelters</h3>
+                            <p class="card__text"> Everyone deserves a safe place to rest. Our partnering local shelters offer temporary housing, warm meals, and supportive services. Whether you need a bed for the night or hekp finding long-term stability, these shelters are here to provide comfort, care, and a path forward.
+                            </p>
+                            <p class="card__text"> Click here to learn more.</p>
+                            <a class="btn btn--small" href="#">Learn More</a>
+                    </div>
+                </li>
+
+                <!-- Food/Clothes Bank -->
+                      <li class="card">
+                    <div>
+                        <img id="card__media" src="img/foodclothebank.png" alt="">
+                    </div>
+                    <div class="card__body">
+                        <h3 class="card__title"> Food & Clothing Banks </h3>
+                            <p class="card__text">Access to nourishment and clean clothing can help make all the difference. Our partnering local food and clothing banks provide free essential items to those in need. Whether you're looking for a meal, snacks, or seasonal clothing, these resources are here to help restore comfort and dignity... one visit at a time.</p>
+                            <p class="card__text"></p>
+                            <a class="btn btn--small" href="#">Learn More</a>
+                    </div>
+                </li>
+
+                <!-- encampments-->
+                     <li class="card">
+                    <div>
+                        <img id="card__media" src="img/encampment-site.png" alt="homeless encampment site">
+                    </div>
+                    <div class="card__body">
+                        <h3 class="card__title"> Homeless Encampments </h3>
+                            <p class="card__text"> Encampments are often formed by individuals seeking safety, stability and community when shelter options are limited. Our goal is to provide outreach and connection to supportive services for those living in these spaces. This form informs Homebase Health about an encampment sites in the area for proper outreach and care.</p>
+                            <p class="card__text"></p>
+                            <a class="btn btn--small" href="#">Learn More</a>
+                    </div>
+                </li>
+
+              <li class="card">
+                    <div>
+                        <img id="card__media" src="img/mental-health.png" alt="">
+                    </div>
+                    <div class="card__body">
+                        <h3 class="card__title">Homebase Wellness Programs</h3>
+                            <p class="card__text"> Caring for mental health is just as important as caring for the body. These initiatives focus on providing counseling, crisis intervention, and long term support for our friends in need. Whether you are facing anxiety, trauma, in need of rehabilitation, or the daily challenges survival, we are here to help. Explore our free and low-cost mental health services. </p>
+                            <a class="btn btn--small" href="#">Learn More</a>
+                    </div>
+                </li>
+            </ul>
+    </section>
+  </main>
+
+  <footer class="site-footer" aria-labelledby="footer-heading">
+        <!-- Main footer content -->
+          <div class="footer-main">
+          <!-- Dropdown menus -->
+            <nav class="footer-links" aria-label="Footer navigation">
+
+               <!-- About dropdown -->
+                <div class="footer-dropdown">
+                    <button class="fd-toggle" aria-expanded="false" aria-controls="fd-about">
+                        <span class="fd-label">About Us</span>
+                            <svg class="fd-caret" viewBox="0 0 24 24" aria-hidden="true">
+                              <path d="M6 9l6 6 6-7" fill="none" stroke="currentColor" stroke-width="2"/>
+                            </svg>
+                      </button>
+                      <ul id="fd-about" class="fd-menu" hidden>
+                        <li><a href="#">Our Story</a></li>
+                        <li><a href="#">Contact</a></li>
+                      </ul>
+                </div>
+
+                <!-- Programs dropdown -->
+                <div class="footer-dropdown">
+                  <button class="fd-toggle" aria-expanded="false" aria-controls="fd-programs">
+                    <span class="fd-label">Programs</span>
+                    <svg class="fd-caret" viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M6 9l6 6 6-7" fill="none" stroke="currentColor" stroke-width="2"/>
+                    </svg>
+                  </button>
+                  <ul id="fd-programs" class="fd-menu" hidden>
+                    <li><a href="#">Clinic Locator</a></li>
+                    <li><a href="#">Community Partners</a></li>
+                    <li><a href="#">Volunteer</a></li>
+                  </ul>
+                </div>
+
+      <!-- Resources dropdown -->
+      <div class="footer-dropdown">
+        <button class="fd-toggle" aria-expanded="false" aria-controls="fd-resources">
+          <span class="fd-label">Resources</span>
+          <svg class="fd-caret" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6 9l6 6 6-7" fill="none" stroke="currentColor" stroke-width="2"/>
+          </svg>
+        </button>
+        <ul id="fd-resources" class="fd-menu" hidden>
+          <li><a href="faqs.html">FAQs</a></li>
+          <li><a href="support.html">Support</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Social + Donate block -->
+        <div class="social-donate">
+                <ul class="social">
+                    <li><a href="https://www.facebook.com/"><img src="images/facebook.svg"></a></li> 
+                    <li><a href="https://x.com/"><img src="images/x-twitter.svg"></a></li>
+                    <li><a href="https://www.instagram.com/"><img src="images/instagram.svg"></a></li>
+                </ul>
+                <!-- <a class="donate-btn" href="#">Donate</a> -->
+            </div>
+         </div>
+
+  <!-- Footer bottom (brand + legal) -->
+        <div class="footer-bottom">
+          <p class="brand">© 2025 Homebase Health</p>
+          <ul class="legal">
+            <li><a href="#">Donate</a></li>
+            <li><a href="#"> Non-Discrimination and Accessibility Notice</a></li>
+            <li><a href="#">Accessibility Notice </a></li>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms &amp; Conditions</a></li>
+          </ul>
+        </div>
+      </footer>
+  <script src="js/script.js"></script>
+  <script src="js/resource.js"></script>
+</body>
+</html>

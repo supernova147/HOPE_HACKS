@@ -3,7 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const fetchFacilities = require('./facilities.js');
 const path = require('path');
-const { pool } = require('./db');
+const { pool } = require('./db.js');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -19,6 +19,14 @@ app.get('', (req, res) => {
 
 app.get('/map', (req, res) => {
     res.sendFile(path.join(__dirname, '../public/map.html'));
+});
+
+app.get('/form', (req, res) => {
+    res.sendFile(path.join(__dirname, '../public/form.html'));
+});
+
+app.get('/resources', (req, res) => {
+    res.sendFile(path.join(__dirname, '../public/resources.html'));
 });
 
 app.get('/config', (req, res) => {
@@ -151,5 +159,6 @@ app.get('/orgfacilities{/:city}', async (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`Server running at ${PORT}`);
+    // console.log(`Server running at ${PORT}`);
+    console.log(`Server is running on http://localhost:${PORT}`);
 });
