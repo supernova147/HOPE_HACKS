@@ -1,6 +1,5 @@
 
 /* Accessible, swipeable carousel */
-
 // CHANGE: Listen for the 'load' event, which fires after all assets (like images) are loaded.
 window.addEventListener('load', function(){ 
   const root = document.getElementById('resourcesCarousel');
@@ -58,84 +57,3 @@ window.addEventListener('load', function(){
      }
   });
 });
-
-  // function play(){
-  //   clearInterval(timer);
-  //   timer = setInterval(nextSlide, interval);
-  //   autoplay = true;
-  //   if (toggle){ 
-  //     toggle.textContent='⏸'; 
-  //     toggle.setAttribute('aria-pressed','true'); 
-  //     toggle.setAttribute('aria-label','Pause autoplay'); 
-  //   }
-  // }
-
-  // function pause(){
-  //   clearInterval(timer); timer=null;
-  //   if (toggle){ 
-  //     toggle.textContent='▶︎'; 
-  //     toggle.setAttribute('aria-pressed','false'); 
-  //     toggle.setAttribute('aria-label','Play autoplay'); 
-  //   }
-  // }
-
-  // function toggleAutoplay(){
-  //   if(timer){
-  //     pause();
-  //   }else{
-  //     play();
-  //   }
-  // }
-
-  // 3. DELAYED INITIAL STARTUP
-  // This ensures a 100ms pause after all assets are loaded before starting the timer.
-
-
-    // } else if (t === toggle) {
-    //     toggleAutoplay();
-
-  // root.tabIndex = 0;
-  // root.addEventListener('keydown', (e)=>{
-  //   if(e.code ==='ArrowRight'){ e.preventDefault(); nextSlide(); }
-  //   if(e.code === 'ArrowLeft'){ e.preventDefault(); prevSlide(); }
-  // });
-
-  //   setTimeout(() => {
-  //   console.log("Forcing delayed carousel start.");
-  //   show(0);
-  //   play();
-  // }, 2000); 
-  // root.tabIndex = 0;
-  // root.addEventListener('keydown', (e)=>{
-  //   if(e.key==='ArrowRight'){ e.preventDefault(); nextSlide(); }
-  //   if(e.key==='ArrowLeft'){ e.preventDefault(); prevSlide(); }
-  // });
-
-  // Hover management
-  // let autoPlaying = true;
-  // root.addEventListener('mouseenter', () => {
-  //   autoPlaying = (timer !== null);
-  //   pause();
-  // });
-  // root.addEventListener('mouseleave', () => { 
-  //   if (autoPlaying) { 
-  //     play();
-  //   }
-  // });
-  
-  //Focus management
-  // root.addEventListener('focusin', () => {
-  //   autoPlaying = (timer !== null);
-  //   pause();
-  // });
-  // root.addEventListener('focusout', (e) => {
-  //   if (!root.contains(e.relatedTarget) && autoPlaying) {
-  //     play();
-  //   }
-  // });
-
-  // Swipe support
-  // let startX=0, dx=0, drag=false;
-  // root.addEventListener('pointerdown', e=>{ drag=true; startX=e.clientX; root.setPointerCapture?.(e.pointerId); });
-  // root.addEventListener('pointermove', e=>{ if(drag) dx=e.clientX-startX; });
-  // root.addEventListener('pointerup', ()=>{ if(!drag) return; if(dx<-40) nextSlide(); if(dx>40) prevSlide(); drag=false; dx=0; });
